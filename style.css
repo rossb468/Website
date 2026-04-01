@@ -16,6 +16,10 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.02em;
 }
 
+h6 {
+	font-size: 1em;
+}
+
 /* Title bar - white background */
 .title-bar {
     background: #ffffff;
@@ -115,10 +119,14 @@ a { color: #2a6496; }
 a:hover { color: #1e3a54; }
 
 /* Headings in content */
+#postlist-heading {
+	font-size: 2em;
+	margin-bottom: 6px;
+}
 main h1 {
-    font-size: 1.8em;
+    font-size: 1.6em;
     color: #1e3a54;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
 }
 
 main h2 {
