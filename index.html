@@ -3,46 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - My Blog</title>
+    <title>Home - Ross Bower</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="title-bar">
         <div class="title-inner">
-            <h1>Ross Bower</h1>
-<p><em>Software Engineer &amp; iOS Developer</em></p>
+            <h1>Ross Bower's Blog</h1>
+<p>Software engineer and technology enthusiast.</p>
         </div>
     </div>
     <header>
         <div class="header-inner">
-            <div class="contact-links"><a href="https://github.com/rossb468">GitHub</a> <a href="mailto:rossbower@mac.com">rossbower@mac.com</a></div>
-            <div class="achievements"><div class="achievement-col"><h3>Education</h3>
+            <div class="contact-links"><a href="https://github.com/rossb468">GitHub</a> <a href="mailto:rossbower@icloud.com">rossbower@icloud.com</a></div>
+            <div class="achievements"><div class="achievement-col"><h3>Skills</h3>
 <ul>
-<li>B.S. Computer Science</li>
-<li>Dean's List, 2018–2022</li>
-<li>Senior Thesis in Distributed Systems</li>
-</ul></div><div class="achievement-col"><h3>Experience</h3>
+<li>Swift &amp; SwiftUI</li>
+<li>macOS &amp; iOS Development</li>
+<li>Python &amp; Automation</li>
+</ul></div><div class="achievement-col"><h3>Projects</h3>
 <ul>
-<li>iOS Developer, 4+ years</li>
-<li>Swift, Objective-C, SwiftUI</li>
-<li>REST APIs &amp; Core Data</li>
-</ul></div><div class="achievement-col"><h3>Interests</h3>
-<ul>
-<li>Performance Optimization</li>
-<li>Developer Tooling</li>
+<li>Blog Engine GUI</li>
 <li>Open Source Contributions</li>
+<li>Developer Tools</li>
 </ul></div></div>
         </div>
     </header>
     <main>
-        <p>Welcome! Here you'll find my latest writing on Swift development, software architecture, and the occasional deep dive into something unexpected.</p>
+        <p>Welcome to my blog! I write about software development, Swift, and macOS engineering.</p>
 <h2>Posts</h2>
-<ul class="post-list">
-<li><span class="post-date">2026-03-14</span><a href="getting-started-with-swift.html">Getting Started with Swift</a></li>
-<li><span class="post-date">2026-02-20</span><a href="swift-concurrency.html">Swift Concurrency in Practice</a></li>
-<li><span class="post-date">2026-01-10</span><a href="welcome.html">Welcome to My Blog</a></li>
+<div class="post-list">
+<article class="post-entry">
 
-</ul>
+<h1>How You Doin'? - A mood tracking app with everything you want and nothing you don't</h1>
+<h6>Design by Ross, code by Claude</h6>
+<p>The mood tracking app space is full of complicated apps stuffed with features I'll never use. I wanted a simple, native app that would let me enter my mood easily, quickly, and without any friction. I wanted an app where someone could enter and view moods without ever realizing other features existed, yet have those features intuitively available if desired.</p>
+<p>The design stems from my desire to minimize the friction required to start a mood tracking practice. The three large mood entry buttons dominate the home area because 99% of the time when I launch my mood tracking app it's to enter my mood. A reverse-chronological list of previously entered moods descends from these buttons. Above the mood buttons lies a Settings menu accessed with a swipe. Tapping a mood presents options to edit the entry, while swiping left on a mood allows for deletion.</p>
+<p>Colors and typography are intentionally bold and bright to reinforce the simplicity of concept while feeling at home on iOS 26. Liquid Glass design principles are reflected throughout, from the softly curved button and card corners to a beautiful floating mood editing sheet.</p>
+<a href="HowYouDoin Readme.html" class="read-more">Read more &rarr;</a>
+</article>
+<article class="post-entry">
+
+<h1>SimpleCalc</h1>
+<h2>RPN Calculator for Windows Phone</h2>
+<p>I made this app in 2015 when I worked at Microsoft and was using Windows Phone as my primary mobile device. I have enjoyed <a href="https://en.wikipedia.org/wiki/Reverse_Polish_notation">Reverse-Polish Notation (RPN)</a> calculators since my undergraduate days, but I found there was a derth of options on the Windows Phone store.</p>
+<p>While a polished UI was perhaps the primary goal of this project, the central challenge proved to be the parsing engine.</p>
+<a href="SimpleCalc Readme.html" class="read-more">Read more &rarr;</a>
+</article>
+<article class="post-entry">
+
+<h1>iLog</h1>
+<h3>Super simple time tracking for Mac</h3>
+<h6>Design and code by Ross</h6>
+<p>In 2009 when I was a sophomore at Drexel University I had a friend who worked several part-time jobs. He found the task of adding up and logging his hours each week to be tedious and frustrating. He entered all his shifts into different calendars in iCal, but had to manually add up the hours each pay period. I was teaching myself Objective-C at the time and this seemed like a perfect challenge.</p>
+<p>iLog pulls data from the macOS calendar API and produces a tally of hours logged in each calendar over a given period, which is adjustable in Preferences per calendar to account for different pay periods. It floats above other applications and across all spaces so that it can serve as a quick reference when entering hours into other applications or websites.</p>
+<p>Building iLog was a crash course in integrating system APIs and UI components. More work ultimately went into the Preferences menu than the core concept because it involved so many controls. Previously I had only developed CLI apps, where the business logic is 99% of the code.</p>
+<a href="iLog Readme.html" class="read-more">Read more &rarr;</a>
+</article>
+
+</div>
 
     </main>
     <footer>Generated by BlogEngine</footer>
