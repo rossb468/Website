@@ -40,67 +40,25 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 4px;
 }
 
-/* Header - blue background for nav + achievements */
-header {
-    background: #2a6496;
-    color: #e8eef4;
-    padding: 0;
-}
-
-.header-inner {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
 /* Contact links */
 .contact-links {
-1    padding: 14px 0;
+    padding-top: 12px;
     font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
     font-stretch: condensed;
     font-weight: 500;
     font-size: 0.9em;
     letter-spacing: 0.03em;
-1}
+}
 
 .contact-links a {
-1    color: #e8c547;
+    color: #2a6496;
     text-decoration: none;
     margin-right: 20px;
 }
 
 .contact-links a:hover {
-1    color: #f5df82;
+    color: #1e3a54;
     text-decoration: underline;
-}
-
-/* Achievements columns */
-.achievements {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 24px;
-    padding: 20px 0 28px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.achievement-col h3 {
-    font-size: 0.95em;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #e8c547;
-    margin-bottom: 8px;
-}
-
-.achievement-col ul {
-    list-style: none;
-    padding: 0;
-}
-
-.achievement-col li {
-    font-size: 0.9em;
-    color: #f0e6c0;
-    line-height: 1.5;
-    margin-bottom: 4px;
 }
 
 /* Navigation bar */
