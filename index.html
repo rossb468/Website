@@ -10,65 +10,79 @@
     <div class="title-bar">
         <div class="title-inner">
             <h1>Ross Bower</h1>
-<p>UX Engineer with 10+ years experience shipping high quality UI experiences used by millions worldwide. Specializing in animation, performance, and optimization. Strong background in cross-functional collaboration across engineering, design,, and leadership.</p>
+            <p>UX Engineer with 10+ years experience shipping high quality UI experiences used by millions worldwide. Specializing in animation, performance, and optimization. Strong background in cross-functional collaboration across engineering, design,, and leadership.</p>
         </div>
     </div>
     <header>
         <div class="header-inner">
             <div class="contact-links"><a href="https://github.com/rossb468">GitHub</a> <a href="mailto:rossbower@icloud.com">rossbower@icloud.com</a></div>
             <div class="achievements"><div class="achievement-col"><h3>Education</h3>
-<ul>
-<li>M.S. Human-Computer Interaction, Drexel University</li>
-<li>B.S. Computer Science, Drexel University</li>
-<li>Driver distraction research using NHTSA glance metrics</li>
-</ul></div><div class="achievement-col"><h3>Experience</h3>
-<ul>
-<li>Creative Developer, Disney Streaming (2016–2023)</li>
-<li>Software Engineer, Microsoft (2012–2016)</li>
-<li>Co-ops at Thomson Reuters and Drexel College of Medicine</li>
-</ul></div><div class="achievement-col"><h3>Skills</h3>
-<ul>
-<li>C#, Swift, JavaScript, Python</li>
-<li>iOS, Xbox, UWP, SwiftUI, React Native</li>
-<li>Figma, Xcode, Visual Studio, Git</li>
-</ul></div></div>
+                <ul>
+                    <li>M.S. Human-Computer Interaction, Drexel University</li>
+                    <li>B.S. Computer Science, Drexel University</li>
+                    <li>Driver distraction research using NHTSA glance metrics</li>
+                </ul>
+            </div>
+                <div class="achievement-col"><h3>Experience</h3>
+                    <ul>
+                        <li>Creative Developer, Disney Streaming (2016–2023)</li>
+                        <li>Software Engineer, Microsoft (2012–2016)</li>
+                        <li>Co-ops at Thomson Reuters and Drexel College of Medicine</li>
+                    </ul>
+                </div><div class="achievement-col"><h3>Skills</h3>
+                    <ul>
+                        <li>C#, Swift, JavaScript, Python</li>
+                        <li>iOS, Xbox, UWP, SwiftUI, React Native</li>
+                        <li>Figma, Xcode, Visual Studio, Git</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </header>
     <main>
-        
-<h1 id="postlist-heading">Projects</h2>
+        <h2>Posts</h2>
 <div class="post-list">
 <article class="post-entry">
-
-<h1>How You Doin'? - A mood tracking app with everything you want and nothing you don't</h1>
+    <div class="post-preview">
+        <h1>How You Doin'? - A mood tracking app with everything you want and nothing you don't</h1>
 <h6>Design by Ross, code by Claude</h6>
 <p>The mood tracking app space is full of complicated apps stuffed with features I'll never use. I wanted a simple, native app that would let me enter my mood easily, quickly, and without any friction. I wanted an app where someone could enter and view moods without ever realizing other features existed, yet have those features intuitively available if desired.</p>
 <p>The design stems from my desire to minimize the friction required to start a mood tracking practice. The three large mood entry buttons dominate the home area because 99% of the time when I launch my mood tracking app it's to enter my mood. A reverse-chronological list of previously entered moods descends from these buttons. Above the mood buttons lies a Settings menu accessed with a swipe. Tapping a mood presents options to edit the entry, while swiping left on a mood allows for deletion.</p>
 <p>Colors and typography are intentionally bold and bright to reinforce the simplicity of concept while feeling at home on iOS 26. Liquid Glass design principles are reflected throughout, from the softly curved button and card corners to a beautiful floating mood editing sheet.</p>
-<a href="HowYouDoin Readme.html" class="read-more">Read more &rarr;</a>
+    </div>
+    <a href="HowYouDoin Readme.html" class="read-more">Read more &rarr;</a>
 </article>
 <article class="post-entry">
-
-<h1>SimpleCalc</h1>
+    <div class="post-preview">
+        <h1>SimpleCalc</h1>
 <h2>RPN Calculator for Windows Phone</h2>
 <p>I made this app in 2015 when I worked at Microsoft and was using Windows Phone as my primary mobile device. I have enjoyed <a href="https://en.wikipedia.org/wiki/Reverse_Polish_notation">Reverse-Polish Notation (RPN)</a> calculators since my undergraduate days, but I found there was a derth of options on the Windows Phone store.</p>
 <p>While a polished UI was perhaps the primary goal of this project, the central challenge proved to be the parsing engine.</p>
-<a href="SimpleCalc Readme.html" class="read-more">Read more &rarr;</a>
+    </div>
+    <a href="SimpleCalc Readme.html" class="read-more">Read more &rarr;</a>
 </article>
 <article class="post-entry">
-
-<h1>iLog</h1>
+    <div class="post-preview">
+        <h1>iLog</h1>
 <h3>Super simple time tracking for Mac</h3>
 <h6>Design and code by Ross</h6>
 <p>In 2009 when I was a sophomore at Drexel University I had a friend who worked several part-time jobs. He found the task of adding up and logging his hours each week to be tedious and frustrating. He entered all his shifts into different calendars in iCal, but had to manually add up the hours each pay period. I was teaching myself Objective-C at the time and this seemed like a perfect challenge.</p>
 <p>iLog pulls data from the macOS calendar API and produces a tally of hours logged in each calendar over a given period, which is adjustable in Preferences per calendar to account for different pay periods. It floats above other applications and across all spaces so that it can serve as a quick reference when entering hours into other applications or websites.</p>
 <p>Building iLog was a crash course in integrating system APIs and UI components. More work ultimately went into the Preferences menu than the core concept because it involved so many controls. Previously I had only developed CLI apps, where the business logic is 99% of the code.</p>
-<a href="iLog Readme.html" class="read-more">Read more &rarr;</a>
+    </div>
+    <a href="iLog Readme.html" class="read-more">Read more &rarr;</a>
 </article>
 
 </div>
 
     </main>
     <footer>Generated by BlogEngine</footer>
+    <script>
+        document.querySelectorAll('.post-preview').forEach(function(el) {
+            if (el.scrollHeight > el.clientHeight) {
+                el.closest('.post-entry').classList.add('truncated');
+            }
+        });
+    </script>
 </body>
 </html>
