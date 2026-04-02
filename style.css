@@ -103,6 +103,35 @@ header {
     margin-bottom: 4px;
 }
 
+/* Navigation bar */
+.site-nav {
+    background: #1e3a54;
+}
+
+.nav-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 0;
+}
+
+.site-nav a {
+    display: inline-block;
+    padding: 10px 16px;
+    color: #c8d6e0;
+    text-decoration: none;
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    font-weight: 500;
+    font-size: 0.9em;
+    letter-spacing: 0.03em;
+}
+
+.site-nav a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
 /* Main content */
 main {
     max-width: 800px;
