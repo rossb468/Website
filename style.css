@@ -38,7 +38,28 @@ h1, h2, h3, h4, h5, h6 {
 .title-bar h1 {
     font-size: 2.8em;
     color: #2a6496;
+    margin-bottom: 4px;
+}
+
+.contact-info {
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    font-size: 0.9em;
     margin-bottom: 10px;
+}
+
+.contact-info a {
+    color: #5a6d7e;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    color: #2a6496;
+    text-decoration: underline;
+}
+
+.contact-sep {
+    color: #b0bec5;
+    margin: 0 6px;
 }
 
 .tagline {
@@ -52,7 +73,7 @@ h1, h2, h3, h4, h5, h6 {
 .bio {
     color: #5a6d7e;
     font-size: 1em;
-    margin-bottom: 4px;
+    margin-bottom: 10px;
 }
 
 /* Profile photo */
@@ -190,6 +211,95 @@ h1, h2, h3, h4, h5, h6 {
     color: rgba(255,255,255,0.55);
     margin: 0;
     line-height: 1.5;
+}
+
+/* Research strip */
+.research-strip {
+    background: #eef1f4;
+    border-top: 1px solid #dce4ec;
+    border-bottom: 1px solid #dce4ec;
+}
+
+.research-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    padding: 0 0 24px;
+}
+
+.research-card-text {
+    flex: 1;
+}
+
+.research-download {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    flex-shrink: 0;
+    width: 120px;
+}
+
+.research-download img {
+    width: 120px;
+    border-radius: 6px;
+    display: block;
+}
+
+.research-download span {
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    font-size: 0.85em;
+    font-weight: 500;
+    color: #2a6496;
+    text-align: center;
+}
+
+.research-download:hover span {
+    color: #1e3a54;
+    text-decoration: underline;
+}
+
+.research-card-text h4 {
+    font-size: 1.05em;
+    color: #1e3a54;
+    margin: 0 0 7px;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+}
+
+.research-card-text p {
+    font-size: 0.9em;
+    color: #5a6d7e;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.research-heading {
+    color: #2c3e50;
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
+
+.research-card-links {
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+}
+
+.research-link {
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    font-size: 0.85em;
+    font-weight: 500;
+    color: #2a6496;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.research-link:hover {
+    color: #1e3a54;
+    text-decoration: underline;
 }
 
 /* Main content */

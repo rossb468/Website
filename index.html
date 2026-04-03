@@ -11,13 +11,16 @@
         <div class="title-inner">
             <div class="title-text">
                 <h1>Ross Bower</h1>
+                <div class="contact-info">
+                    <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a>
+                    <span class="contact-sep">&middot;</span>
+                    <a href="tel:4848855603">484-885-5603</a>
+                </div>
                 <p class="bio">UX Engineer with more than ten years of experience building high quality interfaces and experiences, specializing in animation design, performance optimization, and human factors</p>
                 <div class="contact-links">
                     <a href="index.html">Home</a>
                     <a href="research.html">Research</a>
                     <a href="https://github.com/rossb468">GitHub</a>
-                    <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a>
-                    <a href="tel:4848855603">484-885-5603</a>
                 </div>
             </div>
             <img src="images/ross-bower.jpg" alt="Ross Bower" class="profile-photo">
@@ -26,6 +29,7 @@
 
     <div class="project-strip">
         <div class="project-strip-inner">
+            <div class="project-strip-header">Selected Projects</div>
             <div class="project-cards-row">
                 <a href="how-you-doin.html" class="project-card">
                     <div class="project-card-img" style="background-image: url('images/how-you-doin-2.png');"></div>
@@ -46,7 +50,26 @@
                         <h4>iLog</h4>
                         <p>Simple time tracking for Mac, powered by your calendar.</p>
                     </div>
-					<div class="project-card-img" style="background-image: url('images/ilog-screenshot.png');"></div>
+                    <div class="project-card-img" style="background-image: url('images/ilog-screenshot.png');"></div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="research-strip">
+        <div class="project-strip-inner">
+            <h3 class="research-heading">Research</h3>
+            <div class="research-card">
+                <div class="research-card-text">
+                    <h4>Comparing Driver Distraction in Touchscreen and Physical Vehicle Interfaces</h4>
+                    <p>As in-car interfaces shift from physical controls to touchscreens, the safety implications remain underexplored. This between-subjects study measured driver visual distraction using NHTSA glance metrics while participants completed common in-vehicle tasks on each interface type. Touchscreen participants produced 14× more NHTSA violations, accumulated 6× more eyes-off-road time, and averaged nearly 3× more glance deviations — while also rating the touchscreen lower on usability, confidence, and perceived safety. Co-authored with Samyukta Iyengar, Drexel University College of Computing &amp; Informatics.</p>
+                    <div class="research-card-links">
+                        <a href="research.html" class="research-link">Read more &rarr;</a>
+                    </div>
+                </div>
+                <a href="driver-distraction-research.pdf" class="research-download">
+                    <img src="images/research-icon.png" alt="Research paper thumbnail">
+                    <span>Download paper &darr;</span>
                 </a>
             </div>
         </div>
@@ -89,86 +112,8 @@
                 </div>
             </div>
         </div>
-
-        <h2>Experience</h2>
-
-        <div class="job-entry">
-            <div class="job-header">
-                <div>
-                    <h3>Disney Streaming</h3>
-                    <span class="job-note">formerly Disney Streaming Services / BAMTech / MLB Advanced Media</span>
-                </div>
-                <span class="job-meta">Creative Developer &middot; 2016–2023</span>
-            </div>
-
-            <div class="job-section">
-                <h4>Disney+ for Xbox &amp; Windows</h4>
-                <p>Joined the Xbox client team following the prototype project, specializing in animation, performance, and UI polish across the Disney+ and Hulu+ apps. I could take a page developed by others and significantly improve its architecture — eliminating UI-blocking data calls, introducing lazy loading, and restructuring XAML for optimal render performance. This work enabled smooth system-standard page transitions and dramatically reduced home screen load times.</p>
-                <p>Designed and built a custom sprite sheet video player from scratch using low-level UWP rendering APIs, solving a looping video performance problem the native player couldn't handle. This control powered the animated brand tiles seen on the Disney+ home screen — the fireworks, comic-book flips, and other hover animations described in the New York Times' Disney+ launch coverage. The tile edge-fade animation system I built, where tiles smoothly dim as they scroll to the screen boundary, is still in the app today.</p>
-                <p>Later led a cross-functional initiative bridging Design and Engineering: audited every color and font reference across the Disney+ and Hulu codebases, reconciled them with the official design library, and built a shared Visual Studio style package that let engineering teams pull design updates via Git with no manual work required.</p>
-            </div>
-
-            <div class="job-section">
-                <h4>Disney+ Launch Prototype</h4>
-                <p>Member of a small skunkworks team — myself, a senior engineer, and a creative director — that built a fully interactive prototype of the Disney+ client from the ground up. We experimented with UI paradigms, facilitated user testing, and presented to design leadership and executives. Every demo shown at the April 2019 Disney+ announcement event in Hollywood was running on the prototype my team built. Disney CEO Bob Iger used it on stage.</p>
-            </div>
-
-            <div class="job-section">
-                <h4>NHL.TV for Xbox</h4>
-                <p>Rebuilt the NHL.TV home page and score widget for Xbox One, improving navigation performance and enabling smooth system-standard animations for a live sports context.</p>
-            </div>
-        </div>
-
-        <div class="job-entry">
-            <div class="job-header">
-                <div>
-                    <h3>Microsoft</h3>
-                    <span class="job-note">MACH IT rotational program</span>
-                </div>
-                <span class="job-meta">Software Engineer &middot; 2012–2016</span>
-            </div>
-
-            <div class="job-section">
-                <h4>Innovation IT — Candidate Experience</h4>
-                <p>Primary UI developer for Candidate Experience, a Surface RT tablet app deployed to job interview candidates arriving at Microsoft's Redmond campus. The app surfaced interview schedules, interviewer bios, campus maps, café locations, and shuttle booking. I owned 100% of the UI code, working in a close collaborative relationship with the team designer to translate designs into polished XAML/C# implementations. Participated actively in HR stakeholder sessions to ensure the product reflected real recruiter needs. The pilot with HR was a success.</p>
-                <p>Also built a conference companion app for an internal Microsoft event under a tight timeline — again serving as the sole UI engineer in a small multidisciplinary team.</p>
-            </div>
-
-            <div class="job-section">
-                <h4>Sales IT — Commission Modeling Dashboard</h4>
-                <p>Co-developed an interactive dashboard enabling Microsoft sales staff to model their complex commission structures. The app required deeply understanding both the compensation algorithms and how salespeople thought about their earnings. The result was a visually rich tablet application with interlinked sliders, editable fields, and live-updating graphs — changing any value cascaded through the entire model in real time. Received a Microsoft IT "Connecting the Company" award for cross-team contributions during this period.</p>
-            </div>
-        </div>
-
-        <div class="job-entry">
-            <div class="job-header">
-                <div>
-                    <h3>Thomson Reuters</h3>
-                </div>
-                <span class="job-meta">Junior Programmer &middot; 2010–2011</span>
-            </div>
-            <p>Designed and built an iOS companion app for EndNote, the reference management software, as a co-op during my undergraduate studies at Drexel.</p>
-        </div>
-
-        <div class="job-entry">
-            <div class="job-header">
-                <div>
-                    <h3>Drexel College of Medicine</h3>
-                </div>
-                <span class="job-meta">Web Application Developer &middot; 2009–2010</span>
-            </div>
-            <p>Researched and implemented body-tracking algorithms for medical simulation software as part of an undergraduate co-op.</p>
-        </div>
     </main>
 
     <footer>Philadelphia, PA &middot; <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a> &middot; <a href="tel:4848855603">484-885-5603</a></footer>
-
-    <script>
-        document.querySelectorAll('.post-preview').forEach(function(el) {
-            if (el.scrollHeight > el.clientHeight) {
-                el.closest('.post-entry').classList.add('truncated');
-            }
-        });
-    </script>
 </body>
 </html>
