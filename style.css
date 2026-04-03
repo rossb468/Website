@@ -16,44 +16,75 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.02em;
 }
 
-/* Title bar - white background */
+/* Title bar */
 .title-bar {
     background: #ffffff;
     border-bottom: 1px solid #e0e6ed;
 }
 
 .title-inner {
-    max-width: 800px;
+    max-width: 960px;
     margin: 0 auto;
-    padding: 36px 20px 24px;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+}
+
+.title-text {
+    flex: 1;
+    padding: 36px 32px 24px 20px;
 }
 
 .title-bar h1 {
     font-size: 2.8em;
     color: #2a6496;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
 }
 
-.title-bar p {
-    color: #5a6d7e;
+.tagline {
+    color: #2c3e50;
     font-size: 1.1em;
+    font-style: italic;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.bio {
+    color: #5a6d7e;
+    font-size: 1em;
     margin-bottom: 4px;
+}
+
+/* Profile photo */
+.profile-photo {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+    align-self: center;
+    margin: 20px 20px 20px 0;
 }
 
 /* Contact links */
 .contact-links {
-    padding-top: 12px;
+    padding-top: 14px;
     font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
     font-stretch: condensed;
     font-weight: 500;
     font-size: 0.9em;
     letter-spacing: 0.03em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 0;
 }
 
 .contact-links a {
     color: #2a6496;
     text-decoration: none;
     margin-right: 20px;
+    white-space: nowrap;
 }
 
 .contact-links a:hover {
@@ -61,38 +92,109 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: underline;
 }
 
-/* Navigation bar */
-.site-nav {
+/* Project strip */
+.project-strip {
     background: #1e3a54;
 }
 
-.nav-inner {
-    max-width: 800px;
+.project-strip-inner {
+    max-width: 960px;
     margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    gap: 0;
+    padding: 24px 20px 24px;
 }
 
-.site-nav a {
-    display: inline-block;
-    padding: 10px 16px;
-    color: #c8d6e0;
-    text-decoration: none;
+.project-strip-header {
+    padding: 18px 0 10px;
     font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    font-size: 0.85em;
     font-weight: 500;
-    font-size: 0.9em;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
 }
 
-.site-nav a:hover {
+.project-cards-row {
+    display: flex;
+}
+
+.project-card {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+}
+
+.project-card:last-child {
+    border-right: none;
+}
+
+.card-vertical {
+    flex-direction: column;
+}
+
+.card-vertical .project-card-img {
+    width: 100%;
+    height: 110px;
+    background-size: contain;
+    background-position: center;
+}
+
+.project-card:hover {
+    background: rgba(255,255,255,0.07);
+}
+
+.project-card-img {
+    width: 130px;
+    flex-shrink: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+}
+
+.project-card-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-card-placeholder span {
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    font-size: 0.75em;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.2);
+    writing-mode: vertical-rl;
+}
+
+.project-card-text {
+    flex: 1;
+    padding: 22px 20px 22px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.project-card-text h4 {
+    font-size: 1.2em;
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
+    margin: 0 0 7px;
+    text-transform: none;
+    letter-spacing: 0.01em;
+}
+
+.project-card-text p {
+    font-size: 0.97em;
+    color: rgba(255,255,255,0.55);
+    margin: 0;
+    line-height: 1.5;
 }
 
 /* Main content */
 main {
-    max-width: 800px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 30px 20px;
 }
@@ -105,26 +207,44 @@ a:hover { color: #1e3a54; }
 main h1 {
     font-size: 1.8em;
     color: #1e3a54;
-    margin-bottom: 10px;
 }
 
 main h2 {
     font-size: 1.4em;
     color: #1e3a54;
-    margin-top: 30px;
-    margin-bottom: 12px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #dce4ec;
 }
 
 main h3 {
     font-size: 1.15em;
     color: #2c3e50;
-    margin-top: 24px;
     margin-bottom: 8px;
+}
+
+main h4 {
+    font-size: 0.95em;
+    color: #2a6496;
+    margin-top: 18px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+main h6 {
+    font-size: 0.95em;
+    color: #7f8c8d;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    margin-top: 0;
+    margin-bottom: 20px;
 }
 
 /* Paragraphs */
 main p {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 /* Code */
@@ -170,7 +290,99 @@ main li {
     margin-bottom: 6px;
 }
 
-/* Post list - embedded entries */
+/* Two-column layout */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 8px;
+}
+
+/* Education entries */
+.edu-entry {
+    margin-bottom: 16px;
+    font-size: 0.95em;
+    line-height: 1.6;
+}
+
+.edu-entry strong {
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    font-weight: 500;
+    color: #1e3a54;
+}
+
+.edu-detail {
+    display: block;
+    margin-top: 4px;
+    color: #5a6d7e;
+    font-size: 0.93em;
+}
+
+/* Skills grid */
+.skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.95em;
+}
+
+.skill-label {
+    display: block;
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    font-weight: 500;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #2a6496;
+    margin-bottom: 1px;
+}
+
+/* Job entries */
+.job-entry {
+    margin-bottom: 36px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid #dce4ec;
+}
+
+.job-entry:last-of-type {
+    border-bottom: none;
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 4px;
+}
+
+.job-header h3 {
+    margin-top: 0;
+    margin-bottom: 2px;
+}
+
+.job-note {
+    font-size: 0.8em;
+    color: #7f8c8d;
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.job-meta {
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    font-size: 0.85em;
+    color: #5a6d7e;
+    white-space: nowrap;
+    padding-top: 4px;
+    flex-shrink: 0;
+}
+
+.job-section {
+    margin-top: 14px;
+}
+
+/* Post list */
 .post-list {
     display: flex;
     flex-direction: column;
@@ -236,10 +448,18 @@ main li {
 
 /* Footer */
 footer {
-    max-width: 800px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 16px 20px;
     border-top: 1px solid #dce4ec;
     font-size: 0.8em;
     color: #7f8c8d;
+}
+
+footer a {
+    color: #7f8c8d;
+}
+
+footer a:hover {
+    color: #2a6496;
 }

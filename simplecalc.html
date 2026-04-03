@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleCalc – Ross Bower</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="title-bar">
+        <div class="title-inner">
+            <div class="title-text">
+                <h1>Ross Bower</h1>
+                <p class="tagline">I build the layer between design and engineering — native apps where animation, performance, and interaction quality actually matter.</p>
+                <div class="contact-links">
+                    <a href="index.html">Home</a>
+                    <a href="research.html">Research</a>
+                    <a href="https://github.com/rossb468">GitHub</a>
+                    <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a>
+                    <a href="tel:4848855603">484-885-5603</a>
+                </div>
+            </div>
+            <img src="images/ross-bower.jpg" alt="Ross Bower" class="profile-photo">
+        </div>
+    </div>
+
+    <main>
+        <h1>SimpleCalc</h1>
+        <h3>RPN Calculator for Windows Phone</h3>
+		<h6>Hand-coded</h6>
+        <p>I made this app in 2015 when I worked at Microsoft and was using Windows Phone as my primary mobile device. I have enjoyed <a href="https://en.wikipedia.org/wiki/Reverse_Polish_notation">Reverse-Polish Notation (RPN)</a> calculators since my undergraduate days, but I found there was a dearth of options on the Windows Phone store.</p>
+        <p>While a polished UI was perhaps the primary goal of this project, the central challenge proved to be the parsing engine.</p>
+
+        <div style="margin-top: 24px;">
+            <img src="images/simplecalc-screenshot.png" alt="SimpleCalc screenshot" style="max-width: 100%; border-radius: 8px;">
+        </div>
+    </main>
+    <footer>Philadelphia, PA &middot; <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a> &middot; <a href="tel:4848855603">484-885-5603</a></footer>
+    <script>
+        document.querySelectorAll('.post-preview').forEach(function(el) {
+            if (el.scrollHeight > el.clientHeight) {
+                el.closest('.post-entry').classList.add('truncated');
+            }
+        });
+    </script>
+</body>
+</html>

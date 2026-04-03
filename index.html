@@ -3,82 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Ross Bower</title>
+    <title>Ross Bower – UX Engineer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="title-bar">
         <div class="title-inner">
-            <h1>Ross Bower</h1>
-            <p>UX Engineer with 10+ years experience shipping high quality UI experiences used by millions worldwide. Specializing in animation, performance, and optimization. Strong background in cross-functional collaboration across engineering, design, and leadership.</p>
-            <div class="contact-links">
-                <a href="index.html">Home</a>
-                <a href="research.html">Research</a>
+            <div class="title-text">
+                <h1>Ross Bower</h1>
+                <p class="tagline">I build the layer between design and engineering — native apps where animation, performance, and interaction quality actually matter.</p>
+                <p class="bio">Ten years shipping UI at scale across Xbox, iOS, and Windows, most recently at Disney. Currently completing an M.S. in Human-Computer Interaction at Drexel.</p>
+                <div class="contact-links">
+                    <a href="index.html">Home</a>
+                    <a href="research.html">Research</a>
+                    <a href="https://github.com/rossb468">GitHub</a>
+                    <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a>
+                    <a href="tel:4848855603">484-885-5603</a>
+                </div>
+            </div>
+            <img src="images/ross-bower.jpg" alt="Ross Bower" class="profile-photo">
+        </div>
+    </div>
 
-                <a href="https://github.com/rossb468">GitHub</a>
+    <div class="project-strip">
+        <div class="project-strip-inner">
+            <div class="project-cards-row">
+                <a href="how-you-doin.html" class="project-card">
+                    <div class="project-card-img" style="background-image: url('images/how-you-doin-2.png');"></div>
+                    <div class="project-card-text">
+                        <h4>How You Doin'?</h4>
+                        <p>Mood tracker for iOS — everything you want and nothing you don't.</p>
+                    </div>
+                </a>
+                <a href="simplecalc.html" class="project-card">
+                    <div class="project-card-img" style="background-image: url('images/simplecalc-screenshot.png');"></div>
+                    <div class="project-card-text">
+                        <h4>SimpleCalc</h4>
+                        <p>RPN calculator for Windows Phone.</p>
+                    </div>
+                </a>
+                <a href="ilog.html" class="project-card card-vertical">
+                    <div class="project-card-text">
+                        <h4>iLog</h4>
+                        <p>Simple time tracking for Mac, powered by your calendar.</p>
+                    </div>
+					<div class="project-card-img" style="background-image: url('images/ilog-screenshot.png');"></div>
+                </a>
             </div>
         </div>
     </div>
 
     <main>
-        <h3>Education</h3>
-<ul>
-    <li>M.S. Human-Computer Interaction, Drexel University</li>
-    <li>B.S. Computer Science, Drexel University</li>
-    <li>Driver distraction research using NHTSA glance metrics</li>
-</ul>
+        <div class="two-col">
+            <div>
+                <h3>Education</h3>
+                <div class="edu-entry">
+                    <strong>M.S. Human-Computer Interaction</strong><br>
+                    Drexel University, 2024–2026<br>
+                    <span class="edu-detail">Research: Driver distraction in touchscreen vs. physical vehicle controls. Between-subjects study using NHTSA glance metrics — touchscreen interfaces produced 14× more violations and 5× longer gaze deviations.</span>
+                </div>
+                <div class="edu-entry">
+                    <strong>B.S. Computer Science</strong><br>
+                    Drexel University, 2007–2012<br>
+                    <span class="edu-detail">Senior Project: Uniconf, a cross-platform conference management app built with Unisys. Awarded U.S. Patent US20130238704A1.</span>
+                </div>
+            </div>
+            <div>
+                <h3>Skills</h3>
+                <div class="skills-grid">
+                    <div>
+                        <span class="skill-label">Languages</span>
+                        Swift, C#, JavaScript, Objective-C, Python, C
+                    </div>
+                    <div>
+                        <span class="skill-label">Platforms</span>
+                        iOS, SwiftUI, Xbox / UWP, React Native, .NET
+                    </div>
+                    <div>
+                        <span class="skill-label">Tools</span>
+                        Xcode, Visual Studio, Figma, Zeplin, Git
+                    </div>
+                    <div>
+                        <span class="skill-label">Research</span>
+                        HCI study design, mixed-methods evaluation, NHTSA metrics
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<h3>Experience</h3>
-<ul>
-    <li>Creative Developer, Disney Streaming (2016–2023)</li>
-    <li>Software Engineer, Microsoft (2012–2016)</li>
-    <li>Co-ops at Thomson Reuters and Drexel College of Medicine</li>
-</ul>
+        <h2>Experience</h2>
 
-<h3>Skills</h3>
-<ul>
-    <li>C#, Swift, JavaScript, Python</li>
-    <li>iOS, Xbox, UWP, SwiftUI, React Native</li>
-    <li>Figma, Xcode, Visual Studio, Git</li>
-</ul>
+        <div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>Disney Streaming</h3>
+                    <span class="job-note">formerly Disney Streaming Services / BAMTech / MLB Advanced Media</span>
+                </div>
+                <span class="job-meta">Creative Developer &middot; 2016–2023</span>
+            </div>
 
-<h2>Projects</h2>
-<div class="post-list">
-<article class="post-entry">
-    <div class="post-preview">
-        <h1>How You Doin'? - A mood tracking app with everything you want and nothing you don't</h1>
-<h6>Design by Ross, code by Claude</h6>
-<p>The mood tracking app space is full of complicated apps stuffed with features I'll never use. I wanted a simple, native app that would let me enter my mood easily, quickly, and without any friction. I wanted an app where someone could enter and view moods without ever realizing other features existed, yet have those features intuitively available if desired.</p>
-<p>The design stems from my desire to minimize the friction required to start a mood tracking practice. The three large mood entry buttons dominate the home area because 99% of the time when I launch my mood tracking app it's to enter my mood. A reverse-chronological list of previously entered moods descends from these buttons. Above the mood buttons lies a Settings menu accessed with a swipe. Tapping a mood presents options to edit the entry, while swiping left on a mood allows for deletion.</p>
-<p>Colors and typography are intentionally bold and bright to reinforce the simplicity of concept while feeling at home on iOS 26. Liquid Glass design principles are reflected throughout, from the softly curved button and card corners to a beautiful floating mood editing sheet.</p>
-    </div>
-    <a href="HowYouDoin Readme.html" class="read-more">Read more &rarr;</a>
-</article>
-<article class="post-entry">
-    <div class="post-preview">
-        <h1>SimpleCalc</h1>
-<h2>RPN Calculator for Windows Phone</h2>
-<p>I made this app in 2015 when I worked at Microsoft and was using Windows Phone as my primary mobile device. I have enjoyed <a href="https://en.wikipedia.org/wiki/Reverse_Polish_notation">Reverse-Polish Notation (RPN)</a> calculators since my undergraduate days, but I found there was a derth of options on the Windows Phone store.</p>
-<p>While a polished UI was perhaps the primary goal of this project, the central challenge proved to be the parsing engine.</p>
-    </div>
-    <a href="SimpleCalc Readme.html" class="read-more">Read more &rarr;</a>
-</article>
-<article class="post-entry">
-    <div class="post-preview">
-        <h1>iLog</h1>
-<h3>Super simple time tracking for Mac</h3>
-<h6>Design and code by Ross</h6>
-<p>In 2009 when I was a sophomore at Drexel University I had a friend who worked several part-time jobs. He found the task of adding up and logging his hours each week to be tedious and frustrating. He entered all his shifts into different calendars in iCal, but had to manually add up the hours each pay period. I was teaching myself Objective-C at the time and this seemed like a perfect challenge.</p>
-<p>iLog pulls data from the macOS calendar API and produces a tally of hours logged in each calendar over a given period, which is adjustable in Preferences per calendar to account for different pay periods. It floats above other applications and across all spaces so that it can serve as a quick reference when entering hours into other applications or websites.</p>
-<p>Building iLog was a crash course in integrating system APIs and UI components. More work ultimately went into the Preferences menu than the core concept because it involved so many controls. Previously I had only developed CLI apps, where the business logic is 99% of the code.</p>
-    </div>
-    <a href="iLog Readme.html" class="read-more">Read more &rarr;</a>
-</article>
+            <div class="job-section">
+                <h4>Disney+ for Xbox &amp; Windows</h4>
+                <p>Joined the Xbox client team following the prototype project, specializing in animation, performance, and UI polish across the Disney+ and Hulu+ apps. I could take a page developed by others and significantly improve its architecture — eliminating UI-blocking data calls, introducing lazy loading, and restructuring XAML for optimal render performance. This work enabled smooth system-standard page transitions and dramatically reduced home screen load times.</p>
+                <p>Designed and built a custom sprite sheet video player from scratch using low-level UWP rendering APIs, solving a looping video performance problem the native player couldn't handle. This control powered the animated brand tiles seen on the Disney+ home screen — the fireworks, comic-book flips, and other hover animations described in the New York Times' Disney+ launch coverage. The tile edge-fade animation system I built, where tiles smoothly dim as they scroll to the screen boundary, is still in the app today.</p>
+                <p>Later led a cross-functional initiative bridging Design and Engineering: audited every color and font reference across the Disney+ and Hulu codebases, reconciled them with the official design library, and built a shared Visual Studio style package that let engineering teams pull design updates via Git with no manual work required.</p>
+            </div>
 
-</div>
+            <div class="job-section">
+                <h4>Disney+ Launch Prototype</h4>
+                <p>Member of a small skunkworks team — myself, a senior engineer, and a creative director — that built a fully interactive prototype of the Disney+ client from the ground up. We experimented with UI paradigms, facilitated user testing, and presented to design leadership and executives. Every demo shown at the April 2019 Disney+ announcement event in Hollywood was running on the prototype my team built. Disney CEO Bob Iger used it on stage.</p>
+            </div>
 
+            <div class="job-section">
+                <h4>NHL.TV for Xbox</h4>
+                <p>Rebuilt the NHL.TV home page and score widget for Xbox One, improving navigation performance and enabling smooth system-standard animations for a live sports context.</p>
+            </div>
+        </div>
+
+        <div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>Microsoft</h3>
+                    <span class="job-note">MACH IT rotational program</span>
+                </div>
+                <span class="job-meta">Software Engineer &middot; 2012–2016</span>
+            </div>
+
+            <div class="job-section">
+                <h4>Innovation IT — Candidate Experience</h4>
+                <p>Primary UI developer for Candidate Experience, a Surface RT tablet app deployed to job interview candidates arriving at Microsoft's Redmond campus. The app surfaced interview schedules, interviewer bios, campus maps, café locations, and shuttle booking. I owned 100% of the UI code, working in a close collaborative relationship with the team designer to translate designs into polished XAML/C# implementations. Participated actively in HR stakeholder sessions to ensure the product reflected real recruiter needs. The pilot with HR was a success.</p>
+                <p>Also built a conference companion app for an internal Microsoft event under a tight timeline — again serving as the sole UI engineer in a small multidisciplinary team.</p>
+            </div>
+
+            <div class="job-section">
+                <h4>Sales IT — Commission Modeling Dashboard</h4>
+                <p>Co-developed an interactive dashboard enabling Microsoft sales staff to model their complex commission structures. The app required deeply understanding both the compensation algorithms and how salespeople thought about their earnings. The result was a visually rich tablet application with interlinked sliders, editable fields, and live-updating graphs — changing any value cascaded through the entire model in real time. Received a Microsoft IT "Connecting the Company" award for cross-team contributions during this period.</p>
+            </div>
+        </div>
+
+        <div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>Thomson Reuters</h3>
+                </div>
+                <span class="job-meta">Junior Programmer &middot; 2010–2011</span>
+            </div>
+            <p>Designed and built an iOS companion app for EndNote, the reference management software, as a co-op during my undergraduate studies at Drexel.</p>
+        </div>
+
+        <div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>Drexel College of Medicine</h3>
+                </div>
+                <span class="job-meta">Web Application Developer &middot; 2009–2010</span>
+            </div>
+            <p>Researched and implemented body-tracking algorithms for medical simulation software as part of an undergraduate co-op.</p>
+        </div>
     </main>
-    <footer>Generated by BlogEngine</footer>
+
+    <footer>Philadelphia, PA &middot; <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a> &middot; <a href="tel:4848855603">484-885-5603</a></footer>
+
     <script>
         document.querySelectorAll('.post-preview').forEach(function(el) {
             if (el.scrollHeight > el.clientHeight) {
