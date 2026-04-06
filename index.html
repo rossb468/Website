@@ -111,6 +111,81 @@
                 </div>
             </div>
         </div>
+		
+        <h3 style="margin-bottom: 20px;">Work History</h3>
+
+        <div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>Disney Streaming</h3>
+                    <span class="job-note">Creative Developer – Disney+ Prototype</span>
+                </div>
+                <span class="job-meta">2018 – 2019</span>
+            </div>
+            <div class="job-section">
+			   <p>My manager pulled me into the Disney+ prototype early on, before it was called Disney+. In those days it was called Project Dominguez, named after the Dominguez Tree, the oldest living thing in Disneyland. We were soon joined by a motion designer and future creative director. Our mission was to built out the Disney+ UI in an interactive form, so the design team could experience their work "in motion", so executives had something to play with and show off, and eventually so that user testing could be accomplished.</p>
+
+			   <p>We had static page designs to start from, so we quickly built out the basic structure of the UI: Horizontally scrolling rows of tiles, five static brand tiles, and a looping auto-scrolling carousel at the top. Brian, our motion designer, and I worked together to develop the transitions and animations that would bring the interface to life. The prototype became a blueprint for all client teams to follow when implementing animation and transitions.</p>
+
+			   <p>Two interesting engineering challenges stand out to me from this time. First is the infinitely scrolling carousel at the top of the screen. Building a control that scrolls left and right is easy, however looping it proved very challenging. Many different methods existed for manipulating the visual tree or the underlying data structures to move elements around within the list, but each of them caused different and unpredictable glitches, especially when scrolling quickly. This prototype was being used be executives to demonstrate to investors which meant any build we sent out had to be bullet-proof. Eventually I figured out a model that combined under the hood data structure manipulation with advanced XAML visual tree manipulation which resulted in a near-seamless experience.<p>
+
+			   <p>The other challenge involved the behavior of content tiles at the edge of the screen. Disney+ content rows show five tiles at any one time, with the sixth tile half-visible at the edge of the screen. Once scrolled, a half-tile is visible at both ends of the screen. The designs called for these edge tiles to be semi-faded. We tried various overlays but there was always a visible line where the tile could be seen going under the overlay.</p>
+
+			   <p>I developed a solution using a decoupled event/receiver system that could be implemented by the list view and by the tile controls. This system allowed each tile control to know it's relative position within the list and when it's position was about to change. The tile could then manage its own visual state and run animations locally when appropriate. Because the event/receiver system did not depend on tight coupling of lists and their element views the solution scaled to any list view or tile set anywhere in the app.</p>
+
+			   <p>The culmination of the prototype project was the demonstration given by Disney CEO Bog Iger announcing Disney+ to the world at Disney Investor Day, April 11, 2019. Everything shown that day ran on our prototype.</p>
+               </div>
+        </div>
+		<div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>NHL.TV</h3>
+                    <span class="job-note">Creative Developer - NHL.TV</span>
+                </div>
+                <span class="job-meta">2016 – 2018</span>
+            </div>
+            <div class="job-section">
+				<p>NHL.TV was my first real assignment when I arrived at MLB Advanced Media, what would eventually become Disney Streaming. This was on Xbox One which used the UWP framework. I was already familiar with UWP, XAML, and C# from my time at Microsoft so I was feeling confident.</p>
+
+				<p>My first task on NHL.TV was updating their scoreboard UI, which included a significant animation component. I had never done XAML animation before. By the time I finished rebuilding the scoreboard I had learned a little about hockey and a lot about XAML animation.</p>
+
+				<p>My next task for NHL.TV was a home page redesign and rebuild. This was the most advanced design I had ever implemented. I learned about page loading, XAML performance analisys, lazy loading, and XAML optimization.</p>
+            </div>
+		</div>
+
+        <div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>Thomson Reuters</h3>
+                    <span class="job-note">Software Engineer – EndNote Team</span>
+                </div>
+                <span class="job-meta">2010 – 2011</span>
+            </div>
+            <div class="job-section">
+				<p>I was hired by the EndNote team within Thomson Reuters to develop a prototype iPhone companion app for their popular reference management desktop product. I knew a bit of objective sea by this point having developed iLog the previous summer. I worked mostly by myself building an iPhone app capable of displaying the data EndNote stored. I used standard APIs throughout, including CoreData for my internal data store.</p>
+				
+				<p>The EndNote desktop app supported plug-ins through a C API. Using that API I was able to develop a sync plugin that could synchronize changes between the iPhone app and the users desktop app (this was in the days before ubiquitous cloud access). This gave me a foundation in C programing and debugging.</p>
+				
+				<p>After completing my six-month co-op placement I was hired part time for another six months to contribute to the primary EndNote team. I joined the team for standups and contributed bug fixes and small feature modifications.</p>
+            </div>
+        </div>
+
+        <div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>Drexel University College of Medicine</h3>
+                    <span class="job-note">Software Engineer – Medical Training Simulator</span>
+                </div>
+                <span class="job-meta">2008 – 2009</span>
+            </div>
+            <div class="job-section">
+				<p>I was hired by a medical training team within the Drexel College of Medicine as part of a six-month co-op placement. They were developing an interactive video-based training simulator to facilitate remote learning. They wanted students to be able to perform a simulated auscultation exam (listening to the heart and lungs) in a live video chat setting, manipulating simulated instruments on the real video image.</p>
+				
+				<p>The challenge was to identify the location of the person, and the relative position their heart and lungs, within the video feed. I was a Sophomore with no computer vision experience, and Flash at the time had no computer vision APIs that I could use. Everything I built was implemented manually on raw pixel data, and all of the image analysis had to run in 1/24th of a second so the video did not lag.<p>
+					
+					<p>I implemented edge detection algorithms which then enabled point-set analysis using the Hausdorff Distance. Through this I was able to identify the outline of person in in the camera, and then the relative location of any point within that outline. Eventually with fine tuning I was able to achieve reliable identification of a person without the need for a bluescreen/greenscreen in typical lighting conditions while maintaining close to 24fps video performance.<p>
+            </div>
+        </div>
     </main>
 
     <footer>Philadelphia, PA &middot; <a href="mailto:rossbower@mac.com">rossbower@mac.com</a> &middot; <a href="tel:4848855603">484-885-5603</a></footer>

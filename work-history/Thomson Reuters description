@@ -1,0 +1,5 @@
+I was hired by the EndNote team within Thomson Reuters to develop a prototype iPhone companion app for their popular reference management desktop product. I knew a bit of objective sea by this point having developed iLog the previous summer. I worked mostly by myself building an iPhone app capable of displaying the data EndNote stored. I used standard APIs throughout, including CoreData for my internal data store.
+
+The EndNote desktop app supported plug-ins through a C API. Using that API I was able to develop a sync plugin that could synchronize changes between the iPhone app and the users desktop app (this was in the days before ubiquitous cloud access). This gave me a foundation in C programing and debugging.
+
+After completing my six-month co-op placement I was hired part time for another six months to contribute to the primary EndNote team. I joined the team for standups and contributed bug fixes and small feature modifications.
