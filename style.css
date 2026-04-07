@@ -152,7 +152,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card-vertical {
-    flex-direction: column;
+    flex-direction: column-reverse;
 }
 
 .card-vertical .project-card-img {
@@ -572,4 +572,100 @@ footer a {
 
 footer a:hover {
     color: #2a6496;
+}
+
+/* Screenshot row (e.g. How You Doin') */
+.screenshot-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.screenshot-item {
+    width: calc(25% - 12px);
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+/* ── Responsive: narrow screens ───────────────────────────── */
+@media (max-width: 680px) {
+
+    /* Title bar: stack text then photo vertically */
+    .title-inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .title-text {
+        padding: 24px 20px 8px;
+    }
+
+    .profile-photo {
+        width: 100px;
+        height: 100px;
+        margin: 0 0 20px;
+        align-self: center;
+    }
+
+    .contact-links {
+        justify-content: center;
+    }
+
+    /* Project cards: stack vertically with spacing between */
+    .project-cards-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* iLog card: switch from stacked (image below) to image-left in narrow mode */
+    .card-vertical {
+        flex-direction: row-reverse;
+    }
+
+    .card-vertical .project-card-img {
+        width: 110px;
+        height: auto;
+        min-height: 90px;
+    }
+
+    /* Research card: stack vertically */
+    .research-card {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .research-download {
+        flex-direction: row;
+        width: 100%;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 16px;
+    }
+
+    .research-download img {
+        width: 72px;
+    }
+
+    /* Two-column grid: single column */
+    .two-col {
+        grid-template-columns: 1fr;
+    }
+
+    /* Job header: stack company and date */
+    .job-header {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .job-meta {
+        white-space: normal;
+        padding-top: 0;
+    }
+
+    /* Screenshot rows: two per row on narrow screens */
+    .screenshot-item {
+        width: calc(50% - 8px);
+    }
 }
