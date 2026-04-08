@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-op Jobs – Ross Bower</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="title-bar">
+        <div class="title-inner">
+            <div class="title-text">
+                <h1>Ross Bower</h1>
+                <div class="contact-info">
+                    <a href="mailto:rossbower@mac.com">rossbower@mac.com</a>
+                    <span class="contact-sep">&middot;</span>
+                    <a href="tel:4848855603">484-885-5603</a>
+                </div>
+                <p class="bio">UX Engineer with more than ten years of experience building high quality interfaces and experiences, specializing in animation design, performance optimization, and human factors</p>
+                <div class="contact-links">
+                    <a href="index.html">Home</a>
+                    <a href="research.html">Research</a>
+                    <a href="https://github.com/rossb468">GitHub</a>
+                </div>
+            </div>
+            <img src="images/ross-bower.jpg" alt="Ross Bower" class="profile-photo">
+        </div>
+    </div>
+
+    <main>
+        <h1>Co-op Jobs</h1>
+
+        <div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>Thomson Reuters</h3>
+                    <span class="job-note">Junior Developer – EndNote Team</span>
+                </div>
+                <span class="job-meta">2010 – 2011</span>
+            </div>
+            <div class="job-section">
+                <p>I was hired by the EndNote team within Thomson Reuters to develop a prototype iPhone companion app for their popular reference management desktop product. I knew a bit of objective sea by this point having developed iLog the previous summer. I worked mostly by myself building an iPhone app capable of displaying the data EndNote stored. I used standard APIs throughout, including CoreData for my internal data store.</p>
+                <p>The EndNote desktop app supported plug-ins through a C API. Using that API I was able to develop a sync plugin that could synchronize changes between the iPhone app and the users desktop app (this was in the days before ubiquitous cloud access). This gave me a foundation in C programing and debugging.</p>
+                <p>After completing my six-month co-op placement I was hired part time for another six months to contribute to the primary EndNote team. I joined the team for standups and contributed bug fixes and small feature modifications.</p>
+            </div>
+        </div>
+
+        <div class="job-entry">
+            <div class="job-header">
+                <div>
+                    <h3>Drexel University College of Medicine</h3>
+                    <span class="job-note">Web Application Developer – Medical Training Simulator</span>
+                </div>
+                <span class="job-meta">2008 – 2009</span>
+            </div>
+            <div class="job-section">
+                <p>I was hired by a medical training team within the Drexel College of Medicine as part of a six-month co-op placement. They were developing an interactive video-based training simulator to facilitate remote learning. They wanted students to be able to perform a simulated auscultation exam (listening to the heart and lungs) in a live video chat setting, manipulating simulated instruments on the real video image.</p>
+                <p>The challenge was to identify the location of the person, and the relative position their heart and lungs, within the video feed. I was a Sophomore with no computer vision experience, and Flash at the time had no computer vision APIs that I could use. Everything I built was implemented manually on raw pixel data, and all of the image analysis had to run in 1/24th of a second so the video did not lag.</p>
+                <p>I implemented edge detection algorithms which then enabled point-set analysis using the Hausdorff Distance. Through this I was able to identify the outline of person in in the camera, and then the relative location of any point within that outline. Eventually with fine tuning I was able to achieve reliable identification of a person without the need for a bluescreen/greenscreen in typical lighting conditions while maintaining close to 24fps video performance.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>Philadelphia, PA &middot; <a href="mailto:rossbower@mac.com">rossbower@mac.com</a> &middot; <a href="tel:4848855603">484-885-5603</a></footer>
+</body>
+</html>
