@@ -1,2 +1,5 @@
 *.DS_Store
 Generator/
+tools/PhotoUploader/.build/
+tools/PhotoUploader/.swiftpm/
+tools/PhotoUploader/PhotoUploader.app/
