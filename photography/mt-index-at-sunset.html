@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mt. Index at Sunset — Photography — Ross Bower</title>
+<link rel="stylesheet" href="assets/site.css">
+<style>
+    body { --bg1: #172531; --bg2: #1d5872; --accent: #84b7d7; --ambient-text: #f5f5f5; }
+</style>
+</head>
+<body class="detail-page">
+    <header class="site-header">
+        <a class="back-link" href="index.html">&larr; Photography</a>
+        <a class="back-link" href="https://rossbower.com">rossbower.com &rarr;</a>
+    </header>
+    <main class="detail">
+        <div class="photo-stage">
+            <a class="stage-nav stage-nav-prev" href="alert.html" aria-label="Newer photo">&lsaquo;</a>
+            <figure class="detail-figure">
+                <img src="images/large/mt-index-at-sunset.jpg" alt="Mt. Index at Sunset">
+            </figure>
+            <a class="stage-nav stage-nav-next" href="index-town-wall.html" aria-label="Older photo">&rsaquo;</a>
+        </div>
+        <div class="detail-body">
+            <h1>Mt. Index at Sunset</h1>
+            <div class="meta-row">
+                <span class="meta-date">2026-07-07</span>
+                <span class="meta-dims">2400 &times; 1670</span>
+            </div>
+            <p class="caption">Shot on my iPhone 17 Pro while on a phone call walking around my camp site. Processed in Pixelmator. I used AI to remove two large branches from the foreground.</p>
+            <div class="exif-grid">
+                <div class="exif-item"><span class="exif-label">Camera</span><span>Apple iPhone 17 Pro</span></div>
+                <div class="exif-item"><span class="exif-label">Lens</span><span>iPhone 17 Pro back triple camera 16.891mm f/2.8</span></div>
+                <div class="exif-item"><span class="exif-label">Aperture</span><span>f/2.8</span></div>
+                <div class="exif-item"><span class="exif-label">Shutter Speed</span><span>1/121s</span></div>
+                <div class="exif-item"><span class="exif-label">ISO</span><span>ISO 80</span></div>
+                <div class="exif-item"><span class="exif-label">Focal Length</span><span>16.8906mm</span></div>
+                <div class="exif-item"><span class="exif-label">Date Taken</span><span>2026-07-07 20:57:10</span></div>
+            </div>
+            <div class="swatch-row">
+                <button class="swatch" style="background:#e7d8a9;color:#1a1a1a"
+                        data-hex="#e7d8a9" title="Dominant — #e7d8a9 (click to copy)">
+                    <span>#e7d8a9</span>
+                </button>
+                <button class="swatch" style="background:#275877;color:#f5f5f5"
+                        data-hex="#275877" title="Vibrant — #275877 (click to copy)">
+                    <span>#275877</span>
+                </button>
+                <button class="swatch" style="background:#fff4b3;color:#1a1a1a"
+                        data-hex="#fff4b3" title="Light Vibrant — #fff4b3 (click to copy)">
+                    <span>#fff4b3</span>
+                </button>
+                <button class="swatch" style="background:#034968;color:#f5f5f5"
+                        data-hex="#034968" title="Dark Vibrant — #034968 (click to copy)">
+                    <span>#034968</span>
+                </button>
+                <button class="swatch" style="background:#486478;color:#f5f5f5"
+                        data-hex="#486478" title="Muted — #486478 (click to copy)">
+                    <span>#486478</span>
+                </button>
+                <button class="swatch" style="background:#d3cdb3;color:#1a1a1a"
+                        data-hex="#d3cdb3" title="Light Muted — #d3cdb3 (click to copy)">
+                    <span>#d3cdb3</span>
+                </button>
+                <button class="swatch" style="background:#375b76;color:#f5f5f5"
+                        data-hex="#375b76" title="Dark Muted — #375b76 (click to copy)">
+                    <span>#375b76</span>
+                </button>
+            </div>
+            <div class="download-row">
+                <span class="download-label">Download</span>
+                <a class="download-link" href="images/small/mt-index-at-sunset.jpg" download title="≤800px">Small</a>
+                <a class="download-link" href="images/medium/mt-index-at-sunset.jpg" download title="≤1600px">Medium</a>
+                <a class="download-link" href="images/large/mt-index-at-sunset.jpg" download title="≤2400px">Large</a>
+                <a class="download-link" href="images/original/mt-index-at-sunset.jpg" download title="original uploaded file, full resolution 2400×1670">Full Size</a>
+            </div>
+        </div>
+        <section class="more-photos">
+            <h2>More photos</h2>
+            <div class="more-grid">
+                <a class="more-tile" href="light-study-3.html">
+                    <img src="images/thumb/light-study-3.jpg" alt="Light Study 3" loading="lazy">
+                </a>
+                <a class="more-tile" href="alert.html">
+                    <img src="images/thumb/alert.jpg" alt="Alert" loading="lazy">
+                </a>
+                <a class="more-tile" href="index-town-wall.html">
+                    <img src="images/thumb/index-town-wall.jpg" alt="Index Town Wall" loading="lazy">
+                </a>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">&copy; Ross Bower</footer>
+    <script>
+        document.querySelectorAll('.swatch').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var hex = btn.getAttribute('data-hex');
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(hex);
+                }
+                var label = btn.querySelector('span');
+                var original = label.textContent;
+                label.textContent = 'Copied!';
+                setTimeout(function() { label.textContent = original; }, 900);
+            });
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                var prev = document.querySelector('.stage-nav-prev:not(.disabled)');
+                if (prev) prev.click();
+            } else if (e.key === 'ArrowRight') {
+                var next = document.querySelector('.stage-nav-next:not(.disabled)');
+                if (next) next.click();
+            }
+        });
+    </script>
+</body>
+</html>

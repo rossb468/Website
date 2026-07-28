@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alert — Photography — Ross Bower</title>
+<link rel="stylesheet" href="assets/site.css">
+<style>
+    body { --bg1: #2b251d; --bg2: #1d4872; --accent: #d1b88a; --ambient-text: #f5f5f5; }
+</style>
+</head>
+<body class="detail-page">
+    <header class="site-header">
+        <a class="back-link" href="index.html">&larr; Photography</a>
+        <a class="back-link" href="https://rossbower.com">rossbower.com &rarr;</a>
+    </header>
+    <main class="detail">
+        <div class="photo-stage">
+            <a class="stage-nav stage-nav-prev" href="light-study-3.html" aria-label="Newer photo">&lsaquo;</a>
+            <figure class="detail-figure">
+                <img src="images/large/alert.jpg" alt="Alert">
+            </figure>
+            <a class="stage-nav stage-nav-next" href="mt-index-at-sunset.html" aria-label="Older photo">&rsaquo;</a>
+        </div>
+        <div class="detail-body">
+            <h1>Alert</h1>
+            <div class="meta-row">
+                <span class="meta-date">2026-07-21</span>
+                <span class="meta-dims">1957 &times; 2400</span>
+            </div>
+            <p class="caption">I was standing in the doorway about to leave. Leo's attention was fixed on me. I grabbed a snapshot but he held still so I took a more focused shot.</p>
+            <div class="exif-grid">
+                <div class="exif-item"><span class="exif-label">Camera</span><span>Apple iPhone 17 Pro</span></div>
+                <div class="exif-item"><span class="exif-label">Lens</span><span>iPhone 17 Pro back triple camera 16.891mm f/2.8</span></div>
+                <div class="exif-item"><span class="exif-label">Aperture</span><span>f/2.8</span></div>
+                <div class="exif-item"><span class="exif-label">Shutter Speed</span><span>1/30s</span></div>
+                <div class="exif-item"><span class="exif-label">ISO</span><span>ISO 1250</span></div>
+                <div class="exif-item"><span class="exif-label">Focal Length</span><span>16.8906mm</span></div>
+                <div class="exif-item"><span class="exif-label">Date Taken</span><span>2026-07-21 20:53:31</span></div>
+            </div>
+            <div class="swatch-row">
+                <button class="swatch" style="background:#061829;color:#f5f5f5"
+                        data-hex="#061829" title="Dominant — #061829 (click to copy)">
+                    <span>#061829</span>
+                </button>
+                <button class="swatch" style="background:#e3d5b9;color:#1a1a1a"
+                        data-hex="#e3d5b9" title="Light Vibrant — #e3d5b9 (click to copy)">
+                    <span>#e3d5b9</span>
+                </button>
+                <button class="swatch" style="background:#997953;color:#f5f5f5"
+                        data-hex="#997953" title="Muted — #997953 (click to copy)">
+                    <span>#997953</span>
+                </button>
+                <button class="swatch" style="background:#d6c6ab;color:#1a1a1a"
+                        data-hex="#d6c6ab" title="Light Muted — #d6c6ab (click to copy)">
+                    <span>#d6c6ab</span>
+                </button>
+                <button class="swatch" style="background:#544939;color:#f5f5f5"
+                        data-hex="#544939" title="Dark Muted — #544939 (click to copy)">
+                    <span>#544939</span>
+                </button>
+            </div>
+            <div class="download-row">
+                <span class="download-label">Download</span>
+                <a class="download-link" href="images/small/alert.jpg" download title="≤800px">Small</a>
+                <a class="download-link" href="images/medium/alert.jpg" download title="≤1600px">Medium</a>
+                <a class="download-link" href="images/large/alert.jpg" download title="≤2400px">Large</a>
+                <a class="download-link" href="images/original/alert.jpg" download title="original uploaded file, full resolution 1957×2400">Full Size</a>
+            </div>
+        </div>
+        <section class="more-photos">
+            <h2>More photos</h2>
+            <div class="more-grid">
+                <a class="more-tile" href="light-study-3.html">
+                    <img src="images/thumb/light-study-3.jpg" alt="Light Study 3" loading="lazy">
+                </a>
+                <a class="more-tile" href="mt-index-at-sunset.html">
+                    <img src="images/thumb/mt-index-at-sunset.jpg" alt="Mt. Index at Sunset" loading="lazy">
+                </a>
+                <a class="more-tile" href="index-town-wall.html">
+                    <img src="images/thumb/index-town-wall.jpg" alt="Index Town Wall" loading="lazy">
+                </a>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">&copy; Ross Bower</footer>
+    <script>
+        document.querySelectorAll('.swatch').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var hex = btn.getAttribute('data-hex');
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(hex);
+                }
+                var label = btn.querySelector('span');
+                var original = label.textContent;
+                label.textContent = 'Copied!';
+                setTimeout(function() { label.textContent = original; }, 900);
+            });
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                var prev = document.querySelector('.stage-nav-prev:not(.disabled)');
+                if (prev) prev.click();
+            } else if (e.key === 'ArrowRight') {
+                var next = document.querySelector('.stage-nav-next:not(.disabled)');
+                if (next) next.click();
+            }
+        });
+    </script>
+</body>
+</html>

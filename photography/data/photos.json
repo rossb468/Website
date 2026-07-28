@@ -1,142 +1,1016 @@
 {
   "posts" : [
     {
-      "height" : 1472,
-      "slug" : "edit",
-      "small" : "images\/small\/edit.jpg",
-      "width" : 2400,
-      "caption" : "",
-      "full" : "images\/large\/edit.jpg",
-      "original" : "images\/original\/edit.jpeg",
-      "thumb" : "images\/thumb\/edit.jpg",
+      "slug" : "alert",
+      "medium" : "images\/medium\/alert.jpg",
+      "caption" : "I was standing in the doorway about to leave. Leo's attention was fixed on me. I grabbed a snapshot but he held still so I took a more focused shot.",
+      "title" : "Alert",
       "exif" : {
-        "published" : {
-          "aperture" : true,
-          "make" : true,
-          "shutter" : true,
-          "model" : true,
-          "date_taken" : true,
-          "lens" : true,
-          "focal_length" : true,
-          "iso" : true
-        },
         "fields" : [
           {
-            "key" : "make",
-            "group" : "Camera",
             "value" : "Apple",
-            "label" : "Make"
+            "key" : "make",
+            "label" : "Make",
+            "group" : "Camera"
           },
           {
-            "key" : "model",
-            "group" : "Camera",
             "value" : "iPhone 17 Pro",
-            "label" : "Model"
+            "key" : "model",
+            "label" : "Model",
+            "group" : "Camera"
           },
           {
-            "key" : "lens",
-            "group" : "Camera",
+            "value" : "Pixelmator Pro 3.8",
+            "key" : "software",
+            "label" : "Software",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Apple",
+            "key" : "lens_make",
+            "label" : "Lens Make",
+            "group" : "Camera"
+          },
+          {
             "value" : "iPhone 17 Pro back triple camera 16.891mm f\/2.8",
-            "label" : "Lens"
+            "key" : "lens",
+            "label" : "Lens",
+            "group" : "Camera"
           },
           {
-            "key" : "aperture",
-            "group" : "Exposure",
+            "value" : "2.22–16.8906mm f\/1.78–2.79883",
+            "key" : "lens_spec",
+            "label" : "Lens Specification",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Normal",
+            "key" : "orientation",
+            "label" : "Orientation",
+            "group" : "Camera"
+          },
+          {
             "value" : "f\/2.8",
-            "label" : "Aperture"
+            "key" : "aperture",
+            "label" : "Aperture",
+            "group" : "Exposure"
           },
           {
+            "value" : "1\/30s",
             "key" : "shutter",
-            "group" : "Exposure",
-            "value" : "1\/121s",
-            "label" : "Shutter Speed"
+            "label" : "Shutter Speed",
+            "group" : "Exposure"
           },
           {
+            "value" : "ISO 1250",
             "key" : "iso",
-            "group" : "Exposure",
-            "value" : "ISO 80",
-            "label" : "ISO"
+            "label" : "ISO",
+            "group" : "Exposure"
           },
           {
-            "key" : "focal_length",
-            "group" : "Exposure",
             "value" : "16.8906mm",
-            "label" : "Focal Length"
+            "key" : "focal_length",
+            "label" : "Focal Length",
+            "group" : "Exposure"
           },
           {
+            "value" : "200mm",
+            "key" : "focal_length_35mm",
+            "label" : "Focal Length (35mm equiv.)",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "0 EV",
+            "key" : "exposure_bias",
+            "label" : "Exposure Bias",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Program AE",
+            "key" : "exposure_program",
+            "label" : "Exposure Program",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Auto",
+            "key" : "exposure_mode",
+            "label" : "Exposure Mode",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Multi-segment",
+            "key" : "metering_mode",
+            "label" : "Metering Mode",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Off, did not fire",
+            "key" : "flash",
+            "label" : "Flash",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Auto",
+            "key" : "white_balance",
+            "label" : "White Balance",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "2026-07-21 20:53:31",
             "key" : "date_taken",
-            "group" : "Date",
-            "value" : "2026-07-07 20:57:10",
-            "label" : "Date Taken"
+            "label" : "Date Taken",
+            "group" : "Date"
+          },
+          {
+            "value" : "2026-07-21 20:53:31",
+            "key" : "date_digitized",
+            "label" : "Date Digitized",
+            "group" : "Date"
+          },
+          {
+            "value" : "2026-07-21 20:53:31",
+            "key" : "file_modified_exif",
+            "label" : "File Modified (camera)",
+            "group" : "Date"
+          },
+          {
+            "value" : "47.90701, -122.24384",
+            "key" : "location",
+            "label" : "Coordinates",
+            "group" : "Location"
+          },
+          {
+            "value" : "174m",
+            "key" : "altitude",
+            "label" : "Altitude",
+            "group" : "Location"
+          },
+          {
+            "value" : "331°",
+            "key" : "gps_direction",
+            "label" : "Direction",
+            "group" : "Location"
           }
-        ]
-      },
-      "created" : 1785100308451,
-      "medium" : "images\/medium\/edit.jpg",
-      "title" : "Mountain",
-      "palette" : {
-        "light_muted" : {
-          "hex" : "#d5cba5",
-          "text" : "#1a1a1a",
-          "rgb" : [
-            213,
-            203,
-            165
-          ]
-        },
-        "light_vibrant" : {
-          "hex" : "#f5e7a4",
-          "text" : "#1a1a1a",
-          "rgb" : [
-            245,
-            231,
-            164
-          ]
-        },
-        "vibrant" : {
-          "hex" : "#275776",
-          "text" : "#f5f5f5",
-          "rgb" : [
-            39,
-            87,
-            118
-          ]
-        },
-        "dark_vibrant" : {
-          "hex" : "#024a69",
-          "text" : "#f5f5f5",
-          "rgb" : [
-            2,
-            74,
-            105
-          ]
-        },
-        "ambient" : {
-          "text" : "#f5f5f5",
-          "bg2" : "#1d5872",
-          "bg1" : "#0e2c39",
-          "accent" : "#84b6d7"
-        },
-        "muted" : {
-          "hex" : "#79a6b8",
-          "text" : "#f5f5f5",
-          "rgb" : [
-            121,
-            166,
-            184
-          ]
-        },
-        "dominant" : {
-          "hex" : "#d5cba5",
-          "text" : "#1a1a1a",
-          "rgb" : [
-            213,
-            203,
-            165
-          ]
+        ],
+        "published" : {
+          "lens_spec" : false,
+          "shutter" : true,
+          "flash" : false,
+          "date_digitized" : false,
+          "metering_mode" : false,
+          "make" : true,
+          "gps_direction" : false,
+          "orientation" : false,
+          "lens_make" : false,
+          "iso" : true,
+          "software" : false,
+          "focal_length" : true,
+          "focal_length_35mm" : false,
+          "white_balance" : false,
+          "lens" : true,
+          "exposure_mode" : false,
+          "altitude" : false,
+          "file_modified_exif" : false,
+          "location" : false,
+          "exposure_program" : false,
+          "aperture" : true,
+          "exposure_bias" : false,
+          "model" : true,
+          "date_taken" : true
         }
       },
-      "date" : "2026-07-07"
+      "date" : "2026-07-21",
+      "small" : "images\/small\/alert.jpg",
+      "width" : 1957,
+      "height" : 2400,
+      "thumb" : "images\/thumb\/alert.jpg",
+      "full" : "images\/large\/alert.jpg",
+      "original" : "images\/original\/alert.jpg",
+      "palette" : {
+        "dominant" : {
+          "rgb" : [
+            6,
+            24,
+            41
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#061829"
+        },
+        "dark_muted" : {
+          "rgb" : [
+            84,
+            73,
+            57
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#544939"
+        },
+        "muted" : {
+          "rgb" : [
+            153,
+            121,
+            83
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#997953"
+        },
+        "dark_vibrant" : {
+          "rgb" : [
+            6,
+            24,
+            41
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#061829"
+        },
+        "light_vibrant" : {
+          "rgb" : [
+            227,
+            213,
+            185
+          ],
+          "text" : "#1a1a1a",
+          "hex" : "#e3d5b9"
+        },
+        "ambient" : {
+          "bg2" : "#1d4872",
+          "bg1" : "#2b251d",
+          "accent" : "#d1b88a",
+          "text" : "#f5f5f5"
+        },
+        "light_muted" : {
+          "rgb" : [
+            214,
+            198,
+            171
+          ],
+          "text" : "#1a1a1a",
+          "hex" : "#d6c6ab"
+        }
+      },
+      "created" : 1785214852399
+    },
+    {
+      "slug" : "light-study-3",
+      "medium" : "images\/medium\/light-study-3.jpg",
+      "caption" : "I've been experimenting with light and shadow and contrast.",
+      "title" : "Light Study 3",
+      "exif" : {
+        "fields" : [
+          {
+            "value" : "Apple",
+            "key" : "make",
+            "label" : "Make",
+            "group" : "Camera"
+          },
+          {
+            "value" : "iPhone 17 Pro",
+            "key" : "model",
+            "label" : "Model",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Pixelmator Pro 3.8",
+            "key" : "software",
+            "label" : "Software",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Apple",
+            "key" : "lens_make",
+            "label" : "Lens Make",
+            "group" : "Camera"
+          },
+          {
+            "value" : "iPhone 17 Pro back triple camera 6.765mm f\/1.78",
+            "key" : "lens",
+            "label" : "Lens",
+            "group" : "Camera"
+          },
+          {
+            "value" : "2.22–16.8906mm f\/1.78–2.79883",
+            "key" : "lens_spec",
+            "label" : "Lens Specification",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Normal",
+            "key" : "orientation",
+            "label" : "Orientation",
+            "group" : "Camera"
+          },
+          {
+            "value" : "f\/1.8",
+            "key" : "aperture",
+            "label" : "Aperture",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "1\/30s",
+            "key" : "shutter",
+            "label" : "Shutter Speed",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "ISO 1000",
+            "key" : "iso",
+            "label" : "ISO",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "6.765mm",
+            "key" : "focal_length",
+            "label" : "Focal Length",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "35mm",
+            "key" : "focal_length_35mm",
+            "label" : "Focal Length (35mm equiv.)",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "0 EV",
+            "key" : "exposure_bias",
+            "label" : "Exposure Bias",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Program AE",
+            "key" : "exposure_program",
+            "label" : "Exposure Program",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Auto",
+            "key" : "exposure_mode",
+            "label" : "Exposure Mode",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Multi-segment",
+            "key" : "metering_mode",
+            "label" : "Metering Mode",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Off, did not fire",
+            "key" : "flash",
+            "label" : "Flash",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Auto",
+            "key" : "white_balance",
+            "label" : "White Balance",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "2026-07-23 19:25:17",
+            "key" : "date_taken",
+            "label" : "Date Taken",
+            "group" : "Date"
+          },
+          {
+            "value" : "2026-07-23 19:25:17",
+            "key" : "date_digitized",
+            "label" : "Date Digitized",
+            "group" : "Date"
+          },
+          {
+            "value" : "2026-07-23 19:25:17",
+            "key" : "file_modified_exif",
+            "label" : "File Modified (camera)",
+            "group" : "Date"
+          },
+          {
+            "value" : "47.46172, -122.24645",
+            "key" : "location",
+            "label" : "Coordinates",
+            "group" : "Location"
+          },
+          {
+            "value" : "7m",
+            "key" : "altitude",
+            "label" : "Altitude",
+            "group" : "Location"
+          },
+          {
+            "value" : "155°",
+            "key" : "gps_direction",
+            "label" : "Direction",
+            "group" : "Location"
+          }
+        ],
+        "published" : {
+          "lens_spec" : false,
+          "shutter" : true,
+          "make" : true,
+          "date_digitized" : false,
+          "metering_mode" : false,
+          "flash" : false,
+          "gps_direction" : false,
+          "orientation" : false,
+          "lens_make" : false,
+          "software" : false,
+          "iso" : true,
+          "focal_length" : true,
+          "focal_length_35mm" : false,
+          "white_balance" : false,
+          "exposure_mode" : false,
+          "lens" : true,
+          "altitude" : false,
+          "file_modified_exif" : false,
+          "location" : false,
+          "aperture" : true,
+          "exposure_bias" : false,
+          "model" : true,
+          "exposure_program" : false,
+          "date_taken" : true
+        }
+      },
+      "date" : "2026-07-23",
+      "small" : "images\/small\/light-study-3.jpg",
+      "width" : 1800,
+      "height" : 2400,
+      "thumb" : "images\/thumb\/light-study-3.jpg",
+      "full" : "images\/large\/light-study-3.jpg",
+      "original" : "images\/original\/light-study-3.jpg",
+      "palette" : {
+        "ambient" : {
+          "bg2" : "#474747",
+          "bg1" : "#242424",
+          "accent" : "#adadad",
+          "text" : "#f5f5f5"
+        },
+        "muted" : {
+          "rgb" : [
+            136,
+            136,
+            136
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#888888"
+        },
+        "light_muted" : {
+          "rgb" : [
+            184,
+            184,
+            184
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#b8b8b8"
+        },
+        "dominant" : {
+          "rgb" : [
+            7,
+            7,
+            7
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#070707"
+        },
+        "dark_muted" : {
+          "rgb" : [
+            7,
+            7,
+            7
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#070707"
+        }
+      },
+      "created" : 1785214852591
+    },
+    {
+      "slug" : "mt-index-at-sunset",
+      "medium" : "images\/medium\/mt-index-at-sunset.jpg",
+      "caption" : "Shot on my iPhone 17 Pro while on a phone call walking around my camp site. Processed in Pixelmator. I used AI to remove two large branches from the foreground.",
+      "title" : "Mt. Index at Sunset",
+      "exif" : {
+        "fields" : [
+          {
+            "value" : "Apple",
+            "key" : "make",
+            "label" : "Make",
+            "group" : "Camera"
+          },
+          {
+            "value" : "iPhone 17 Pro",
+            "key" : "model",
+            "label" : "Model",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Pixelmator Pro 3.8",
+            "key" : "software",
+            "label" : "Software",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Apple",
+            "key" : "lens_make",
+            "label" : "Lens Make",
+            "group" : "Camera"
+          },
+          {
+            "value" : "iPhone 17 Pro back triple camera 16.891mm f\/2.8",
+            "key" : "lens",
+            "label" : "Lens",
+            "group" : "Camera"
+          },
+          {
+            "value" : "2.22–16.8906mm f\/1.78–2.79883",
+            "key" : "lens_spec",
+            "label" : "Lens Specification",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Normal",
+            "key" : "orientation",
+            "label" : "Orientation",
+            "group" : "Camera"
+          },
+          {
+            "value" : "f\/2.8",
+            "key" : "aperture",
+            "label" : "Aperture",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "1\/121s",
+            "key" : "shutter",
+            "label" : "Shutter Speed",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "ISO 80",
+            "key" : "iso",
+            "label" : "ISO",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "16.8906mm",
+            "key" : "focal_length",
+            "label" : "Focal Length",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "100mm",
+            "key" : "focal_length_35mm",
+            "label" : "Focal Length (35mm equiv.)",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "0 EV",
+            "key" : "exposure_bias",
+            "label" : "Exposure Bias",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Program AE",
+            "key" : "exposure_program",
+            "label" : "Exposure Program",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Auto",
+            "key" : "exposure_mode",
+            "label" : "Exposure Mode",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Spot",
+            "key" : "metering_mode",
+            "label" : "Metering Mode",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Off, did not fire",
+            "key" : "flash",
+            "label" : "Flash",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Auto",
+            "key" : "white_balance",
+            "label" : "White Balance",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Standard",
+            "key" : "scene_capture_type",
+            "label" : "Scene Type",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "2026-07-07 20:57:10",
+            "key" : "date_taken",
+            "label" : "Date Taken",
+            "group" : "Date"
+          },
+          {
+            "value" : "2026-07-07 20:57:10",
+            "key" : "date_digitized",
+            "label" : "Date Digitized",
+            "group" : "Date"
+          },
+          {
+            "value" : "2026-07-07 20:57:10",
+            "key" : "file_modified_exif",
+            "label" : "File Modified (camera)",
+            "group" : "Date"
+          },
+          {
+            "value" : "47.81718, -121.57206",
+            "key" : "location",
+            "label" : "Coordinates",
+            "group" : "Location"
+          },
+          {
+            "value" : "146m",
+            "key" : "altitude",
+            "label" : "Altitude",
+            "group" : "Location"
+          },
+          {
+            "value" : "218°",
+            "key" : "gps_direction",
+            "label" : "Direction",
+            "group" : "Location"
+          }
+        ],
+        "published" : {
+          "scene_capture_type" : false,
+          "model" : true,
+          "lens_make" : false,
+          "metering_mode" : false,
+          "focal_length_35mm" : false,
+          "software" : false,
+          "make" : true,
+          "focal_length" : true,
+          "exposure_program" : false,
+          "aperture" : true,
+          "lens" : true,
+          "lens_spec" : false,
+          "gps_direction" : false,
+          "location" : false,
+          "white_balance" : false,
+          "date_digitized" : false,
+          "orientation" : false,
+          "flash" : false,
+          "exposure_mode" : false,
+          "iso" : true,
+          "shutter" : true,
+          "exposure_bias" : false,
+          "date_taken" : true,
+          "file_modified_exif" : false,
+          "altitude" : false
+        }
+      },
+      "date" : "2026-07-07",
+      "small" : "images\/small\/mt-index-at-sunset.jpg",
+      "width" : 2400,
+      "height" : 1670,
+      "thumb" : "images\/thumb\/mt-index-at-sunset.jpg",
+      "full" : "images\/large\/mt-index-at-sunset.jpg",
+      "original" : "images\/original\/mt-index-at-sunset.jpg",
+      "palette" : {
+        "dominant" : {
+          "rgb" : [
+            231,
+            216,
+            169
+          ],
+          "text" : "#1a1a1a",
+          "hex" : "#e7d8a9"
+        },
+        "vibrant" : {
+          "rgb" : [
+            39,
+            88,
+            119
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#275877"
+        },
+        "dark_muted" : {
+          "rgb" : [
+            55,
+            91,
+            118
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#375b76"
+        },
+        "muted" : {
+          "rgb" : [
+            72,
+            100,
+            120
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#486478"
+        },
+        "dark_vibrant" : {
+          "rgb" : [
+            3,
+            73,
+            104
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#034968"
+        },
+        "light_vibrant" : {
+          "rgb" : [
+            255,
+            244,
+            179
+          ],
+          "text" : "#1a1a1a",
+          "hex" : "#fff4b3"
+        },
+        "ambient" : {
+          "accent" : "#84b7d7",
+          "bg1" : "#172531",
+          "text" : "#f5f5f5",
+          "bg2" : "#1d5872"
+        },
+        "light_muted" : {
+          "rgb" : [
+            211,
+            205,
+            179
+          ],
+          "text" : "#1a1a1a",
+          "hex" : "#d3cdb3"
+        }
+      },
+      "created" : 1785214852739
+    },
+    {
+      "slug" : "index-town-wall",
+      "medium" : "images\/medium\/index-town-wall.jpg",
+      "caption" : "The cliffs rising West of Index, WA are one of the top ten climbing destinations in the United States.",
+      "title" : "Index Town Wall",
+      "exif" : {
+        "fields" : [
+          {
+            "value" : "Apple",
+            "key" : "make",
+            "label" : "Make",
+            "group" : "Camera"
+          },
+          {
+            "value" : "iPhone 17 Pro",
+            "key" : "model",
+            "label" : "Model",
+            "group" : "Camera"
+          },
+          {
+            "value" : "26.5.1",
+            "key" : "software",
+            "label" : "Software",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Apple",
+            "key" : "lens_make",
+            "label" : "Lens Make",
+            "group" : "Camera"
+          },
+          {
+            "value" : "iPhone 17 Pro back triple camera 16.891mm f\/2.8",
+            "key" : "lens",
+            "label" : "Lens",
+            "group" : "Camera"
+          },
+          {
+            "value" : "2.22–16.8906mm f\/1.78–2.79883",
+            "key" : "lens_spec",
+            "label" : "Lens Specification",
+            "group" : "Camera"
+          },
+          {
+            "value" : "Normal",
+            "key" : "orientation",
+            "label" : "Orientation",
+            "group" : "Camera"
+          },
+          {
+            "value" : "f\/2.8",
+            "key" : "aperture",
+            "label" : "Aperture",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "1\/542s",
+            "key" : "shutter",
+            "label" : "Shutter Speed",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "ISO 50",
+            "key" : "iso",
+            "label" : "ISO",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "16.8906mm",
+            "key" : "focal_length",
+            "label" : "Focal Length",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "100mm",
+            "key" : "focal_length_35mm",
+            "label" : "Focal Length (35mm equiv.)",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "0 EV",
+            "key" : "exposure_bias",
+            "label" : "Exposure Bias",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Program AE",
+            "key" : "exposure_program",
+            "label" : "Exposure Program",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Auto",
+            "key" : "exposure_mode",
+            "label" : "Exposure Mode",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Spot",
+            "key" : "metering_mode",
+            "label" : "Metering Mode",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Off, did not fire",
+            "key" : "flash",
+            "label" : "Flash",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Auto",
+            "key" : "white_balance",
+            "label" : "White Balance",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "sRGB",
+            "key" : "color_space",
+            "label" : "Color Space",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "Standard",
+            "key" : "scene_capture_type",
+            "label" : "Scene Type",
+            "group" : "Exposure"
+          },
+          {
+            "value" : "2026-06-29 15:18:29",
+            "key" : "date_taken",
+            "label" : "Date Taken",
+            "group" : "Date"
+          },
+          {
+            "value" : "2026-06-29 15:18:29",
+            "key" : "date_digitized",
+            "label" : "Date Digitized",
+            "group" : "Date"
+          },
+          {
+            "value" : "2026-06-29 15:18:29",
+            "key" : "file_modified_exif",
+            "label" : "File Modified (camera)",
+            "group" : "Date"
+          },
+          {
+            "value" : "47.81812, -121.56275",
+            "key" : "location",
+            "label" : "Coordinates",
+            "group" : "Location"
+          },
+          {
+            "value" : "165m",
+            "key" : "altitude",
+            "label" : "Altitude",
+            "group" : "Location"
+          },
+          {
+            "value" : "12°",
+            "key" : "gps_direction",
+            "label" : "Direction",
+            "group" : "Location"
+          }
+        ],
+        "published" : {
+          "scene_capture_type" : false,
+          "model" : true,
+          "lens_make" : false,
+          "metering_mode" : false,
+          "focal_length_35mm" : false,
+          "software" : false,
+          "make" : true,
+          "focal_length" : true,
+          "exposure_program" : false,
+          "aperture" : true,
+          "lens" : true,
+          "lens_spec" : false,
+          "gps_direction" : false,
+          "location" : false,
+          "white_balance" : false,
+          "date_digitized" : false,
+          "orientation" : false,
+          "flash" : false,
+          "exposure_mode" : false,
+          "color_space" : false,
+          "iso" : true,
+          "shutter" : true,
+          "exposure_bias" : false,
+          "date_taken" : true,
+          "file_modified_exif" : false,
+          "altitude" : false
+        }
+      },
+      "date" : "2026-06-29",
+      "small" : "images\/small\/index-town-wall.jpg",
+      "width" : 2400,
+      "height" : 1524,
+      "thumb" : "images\/thumb\/index-town-wall.jpg",
+      "full" : "images\/large\/index-town-wall.jpg",
+      "original" : "images\/original\/index-town-wall.jpeg",
+      "palette" : {
+        "dominant" : {
+          "rgb" : [
+            117,
+            139,
+            149
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#758b95"
+        },
+        "dark_muted" : {
+          "rgb" : [
+            55,
+            89,
+            104
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#375968"
+        },
+        "muted" : {
+          "rgb" : [
+            117,
+            139,
+            149
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#758b95"
+        },
+        "dark_vibrant" : {
+          "rgb" : [
+            10,
+            71,
+            69
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#0a4745"
+        },
+        "light_vibrant" : {
+          "rgb" : [
+            179,
+            205,
+            231
+          ],
+          "text" : "#1a1a1a",
+          "hex" : "#b3cde7"
+        },
+        "ambient" : {
+          "bg2" : "#1d7270",
+          "bg1" : "#19282f",
+          "accent" : "#83add8",
+          "text" : "#f5f5f5"
+        },
+        "light_muted" : {
+          "rgb" : [
+            166,
+            189,
+            211
+          ],
+          "text" : "#f5f5f5",
+          "hex" : "#a6bdd3"
+        }
+      },
+      "created" : 1785214852896
     }
   ]
 }

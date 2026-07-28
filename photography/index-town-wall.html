@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Index Town Wall — Photography — Ross Bower</title>
+<link rel="stylesheet" href="assets/site.css">
+<style>
+    body { --bg1: #19282f; --bg2: #1d7270; --accent: #83add8; --ambient-text: #f5f5f5; }
+</style>
+</head>
+<body class="detail-page">
+    <header class="site-header">
+        <a class="back-link" href="index.html">&larr; Photography</a>
+        <a class="back-link" href="https://rossbower.com">rossbower.com &rarr;</a>
+    </header>
+    <main class="detail">
+        <div class="photo-stage">
+            <a class="stage-nav stage-nav-prev" href="mt-index-at-sunset.html" aria-label="Newer photo">&lsaquo;</a>
+            <figure class="detail-figure">
+                <img src="images/large/index-town-wall.jpg" alt="Index Town Wall">
+            </figure>
+            <span class="stage-nav stage-nav-next disabled" aria-label="No older photo">&rsaquo;</span>
+        </div>
+        <div class="detail-body">
+            <h1>Index Town Wall</h1>
+            <div class="meta-row">
+                <span class="meta-date">2026-06-29</span>
+                <span class="meta-dims">2400 &times; 1524</span>
+            </div>
+            <p class="caption">The cliffs rising West of Index, WA are one of the top ten climbing destinations in the United States.</p>
+            <div class="exif-grid">
+                <div class="exif-item"><span class="exif-label">Camera</span><span>Apple iPhone 17 Pro</span></div>
+                <div class="exif-item"><span class="exif-label">Lens</span><span>iPhone 17 Pro back triple camera 16.891mm f/2.8</span></div>
+                <div class="exif-item"><span class="exif-label">Aperture</span><span>f/2.8</span></div>
+                <div class="exif-item"><span class="exif-label">Shutter Speed</span><span>1/542s</span></div>
+                <div class="exif-item"><span class="exif-label">ISO</span><span>ISO 50</span></div>
+                <div class="exif-item"><span class="exif-label">Focal Length</span><span>16.8906mm</span></div>
+                <div class="exif-item"><span class="exif-label">Date Taken</span><span>2026-06-29 15:18:29</span></div>
+            </div>
+            <div class="swatch-row">
+                <button class="swatch" style="background:#758b95;color:#f5f5f5"
+                        data-hex="#758b95" title="Dominant — #758b95 (click to copy)">
+                    <span>#758b95</span>
+                </button>
+                <button class="swatch" style="background:#b3cde7;color:#1a1a1a"
+                        data-hex="#b3cde7" title="Light Vibrant — #b3cde7 (click to copy)">
+                    <span>#b3cde7</span>
+                </button>
+                <button class="swatch" style="background:#0a4745;color:#f5f5f5"
+                        data-hex="#0a4745" title="Dark Vibrant — #0a4745 (click to copy)">
+                    <span>#0a4745</span>
+                </button>
+                <button class="swatch" style="background:#a6bdd3;color:#f5f5f5"
+                        data-hex="#a6bdd3" title="Light Muted — #a6bdd3 (click to copy)">
+                    <span>#a6bdd3</span>
+                </button>
+                <button class="swatch" style="background:#375968;color:#f5f5f5"
+                        data-hex="#375968" title="Dark Muted — #375968 (click to copy)">
+                    <span>#375968</span>
+                </button>
+            </div>
+            <div class="download-row">
+                <span class="download-label">Download</span>
+                <a class="download-link" href="images/small/index-town-wall.jpg" download title="≤800px">Small</a>
+                <a class="download-link" href="images/medium/index-town-wall.jpg" download title="≤1600px">Medium</a>
+                <a class="download-link" href="images/large/index-town-wall.jpg" download title="≤2400px">Large</a>
+                <a class="download-link" href="images/original/index-town-wall.jpeg" download title="original uploaded file, full resolution 2400×1524">Full Size</a>
+            </div>
+        </div>
+        <section class="more-photos">
+            <h2>More photos</h2>
+            <div class="more-grid">
+                <a class="more-tile" href="light-study-3.html">
+                    <img src="images/thumb/light-study-3.jpg" alt="Light Study 3" loading="lazy">
+                </a>
+                <a class="more-tile" href="alert.html">
+                    <img src="images/thumb/alert.jpg" alt="Alert" loading="lazy">
+                </a>
+                <a class="more-tile" href="mt-index-at-sunset.html">
+                    <img src="images/thumb/mt-index-at-sunset.jpg" alt="Mt. Index at Sunset" loading="lazy">
+                </a>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">&copy; Ross Bower</footer>
+    <script>
+        document.querySelectorAll('.swatch').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var hex = btn.getAttribute('data-hex');
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(hex);
+                }
+                var label = btn.querySelector('span');
+                var original = label.textContent;
+                label.textContent = 'Copied!';
+                setTimeout(function() { label.textContent = original; }, 900);
+            });
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                var prev = document.querySelector('.stage-nav-prev:not(.disabled)');
+                if (prev) prev.click();
+            } else if (e.key === 'ArrowRight') {
+                var next = document.querySelector('.stage-nav-next:not(.disabled)');
+                if (next) next.click();
+            }
+        });
+    </script>
+</body>
+</html>
