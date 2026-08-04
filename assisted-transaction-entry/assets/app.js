@@ -24,7 +24,8 @@
     entry: '',           // amount keypad buffer, in cents
     draft: null,
     analysis: null,
-    savedCount: 0
+    savedCount: 0,
+    useModel: false
   };
 
   function now() {
@@ -69,7 +70,7 @@
     amount: 'from the amount', time: 'from the time', recurring: 'a recurring charge',
     assumed: 'assumed', you: 'you entered it', context: 'from context',
     learned: 'you taught it this', merchant: 'from the merchant', rule: 'from the amount',
-    text: 'from the text', missing: 'not found'
+    text: 'from the text', missing: 'not found', vision: 'from the vision model'
   };
 
   /* ---------------- screens ---------------- */
@@ -181,21 +182,26 @@
     preview.style.display = 'block';
     preview.style.backgroundImage = 'url(' + image.src + ')';
 
-    setSteps([
+    const steps = [
       { id: 'measure', label: 'Looking at the picture' },
-      { id: 'classify', label: 'Working out what it is' },
+      { id: 'classify', label: 'Working out what it is' }
+    ];
+    if (state.useModel) steps.push({ id: 'model', label: 'Asking the vision model' });
+    steps.push(
       { id: 'exif', label: 'Checking photo metadata' },
       { id: 'ocr', label: 'Reading any text' },
       { id: 'match', label: 'Matching merchant and category' }
-    ]);
+    );
+    setSteps(steps);
     $('#analysing-caption').textContent = label || '';
 
     const analysis = await window.Vision.analyseImage(image, buffer, (stage, detail) => {
       if (stage === 'measuring') setStep('measure', 'doing', detail);
       if (stage === 'classifying') setStep('classify', 'doing', detail);
+      if (stage === 'model') setStep('model', 'doing', detail);
       if (stage === 'exif') setStep('exif', 'doing', detail);
       if (stage === 'ocr') setStep('ocr', 'doing', detail);
-    });
+    }, { useModel: state.useModel });
 
     state.analysis = analysis;
 
@@ -204,6 +210,16 @@
       ' · ' + analysis.features.textLineCount + ' text-like lines', 260);
     await step('classify', 'done', 'Looks like ' + c.label + ' — ' +
       Math.round(c.confidence * 100) + '% (next best: ' + c.runnerUp + ')', 320);
+
+    if (state.useModel) {
+      if (analysis.modelError) {
+        await step('model', 'warn', analysis.modelError + ' — heuristics only', 260);
+      } else if (analysis.model) {
+        const m = analysis.model;
+        await step('model', 'done', 'CLIP says ' + m.top + ' (' +
+          Math.round(m.confidence * 100) + '%) · ' + m.backend, 300);
+      }
+    }
 
     if (analysis.exif && (analysis.exif.capturedAt || analysis.exif.gps)) {
       const bits = [];
@@ -616,13 +632,51 @@
       ['background uniformity', num(f.backgroundUniformity)]
     ];
 
-    let html = '<div class="insp-section"><h5>Verdict</h5>' +
-      '<table class="insp"><tbody>' +
+    const hasModel = !!c.modelProbabilities;
+    let html = '<div class="insp-section"><h5>Verdict' +
+      (hasModel ? ' — heuristics vs. CLIP vs. blended' : '') + '</h5>' +
+      '<table class="insp">' +
+      (hasModel ? '<thead><tr><th>Kind</th><th style="text-align:right">rules</th>' +
+        '<th style="text-align:right">CLIP</th><th style="text-align:right">blend</th></tr></thead>' : '') +
+      '<tbody>' +
       Object.entries(c.probabilities).sort((x, y) => y[1] - x[1]).map(([k, p]) =>
         '<tr' + (k === c.kind ? ' class="lead"' : '') + '><td>' + k + '</td>' +
-        '<td style="width:45%"><span class="meter"><i style="width:' + (p * 100).toFixed(1) + '%"></i></span></td>' +
+        (hasModel
+          ? '<td class="num">' + ((c.heuristicProbabilities[k] || 0) * 100).toFixed(1) + '%</td>' +
+            '<td class="num">' + ((c.modelProbabilities[k] || 0) * 100).toFixed(1) + '%</td>'
+          : '<td style="width:45%"><span class="meter"><i style="width:' + (p * 100).toFixed(1) + '%"></i></span></td>') +
         '<td class="num">' + (p * 100).toFixed(1) + '%</td></tr>').join('') +
-      '</tbody></table></div>';
+      '</tbody></table>' +
+      (hasModel ? '<p style="font-size:11px;color:#8b9aa8;margin-top:7px;line-height:1.5;">' +
+        'Blend is a weighted geometric mean — 65% model, 35% rules. Geometric so that a kind ' +
+        'either side considers near-impossible stays near-impossible.</p>' : '') +
+      '</div>';
+
+    if (a.modelError) {
+      html += '<div class="insp-section"><h5>Vision model</h5>' +
+        '<p class="insp-empty">Did not run: ' + escapeHtml(a.modelError) + '</p></div>';
+    }
+
+    if (a.model) {
+      const cats = Object.entries(a.model.categories).sort((x, y) => y[1] - x[1]).slice(0, 5);
+      html += '<div class="insp-section"><h5>What CLIP thinks was bought</h5>' +
+        '<table class="insp"><tbody>' +
+        cats.map(([id, p]) => {
+          const cat = D.CATEGORY_BY_ID[id];
+          return '<tr><td>' + (cat ? cat.icon + ' ' + escapeHtml(cat.name) : escapeHtml(id)) + '</td>' +
+            '<td style="width:45%"><span class="meter"><i style="width:' + (p * 100).toFixed(1) + '%"></i></span></td>' +
+            '<td class="num">' + (p * 100).toFixed(0) + '%</td></tr>';
+        }).join('') +
+        '</tbody></table>' +
+        '<p style="font-size:11px;color:#8b9aa8;margin-top:7px;line-height:1.5;">' +
+        'Fed into the category scoring only for photos of places and things — on a receipt the ' +
+        'printed words beat the paper\u2019s appearance. Backend: ' + escapeHtml(a.model.backend || '?') + '.</p></div>';
+
+      html += '<div class="insp-section"><h5>Closest captions</h5><table class="insp"><tbody>' +
+        a.model.captions.kind.map(cap => '<tr><td>' + escapeHtml(cap.label) + '</td>' +
+          '<td class="num">' + (cap.score * 100).toFixed(1) + '%</td></tr>').join('') +
+        '</tbody></table></div>';
+    }
 
     if (c.evidence.length) {
       html += '<div class="insp-section"><h5>Why</h5><table class="insp"><tbody>' +
@@ -827,6 +881,16 @@
       updateContextFoot();
     });
 
+    const modelToggle = $('#model-toggle');
+    modelToggle.checked = state.useModel;
+    modelToggle.addEventListener('change', () => {
+      state.useModel = modelToggle.checked;
+      updateContextFoot();
+      if (state.useModel && window.ClipVision && !window.ClipVision.loaded) {
+        toast('The model downloads on your next photo — about 90 MB, then cached.');
+      }
+    });
+
     $('#reset-learning').addEventListener('click', () => {
       window.Infer.clearOverrides();
       toast('Forgot every category correction.');
@@ -851,7 +915,12 @@
       : 'Within a few minutes’ walk: ' + (nearby.length
         ? nearby.map(x => escapeHtml(x.m.name) + ' (' + window.Infer.formatDistance(x.d) + ')').join(', ')
         : 'nothing the app knows about') + '.') +
-      (n ? ' <strong>' + n + '</strong> learned category correction' + (n === 1 ? '' : 's') + ' stored.' : '');
+      (n ? ' <strong>' + n + '</strong> learned category correction' + (n === 1 ? '' : 's') + ' stored.' : '') +
+      (state.useModel
+        ? ' <strong>CLIP is on</strong>' + (window.ClipVision && window.ClipVision.loaded
+            ? ' and loaded' + (window.ClipVision.backend ? ' (' + window.ClipVision.backend + ')' : '') + '.'
+            : ' \u2014 it downloads on the next photo.')
+        : '');
   }
 
   /* ---------------- wiring ---------------- */

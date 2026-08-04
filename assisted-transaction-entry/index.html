@@ -37,7 +37,7 @@
             <p>Manual expense tracking dies on the friction of the entry form. Six fields — amount, merchant, category, date, time, note — and five of them are things the phone could already have worked out. Every one you make somebody type is another chance for them to stop bothering.</p>
             <p>This prototype inverts that. You give it the smallest piece of information you have: four digits on a keypad, or a photo. It fills in everything else, tells you where each answer came from and how sure it is, and keeps every field one tap from being changed. The only thing it will insist on is an amount it genuinely cannot see.</p>
             <div class="proto-note">
-                Everything below runs in this browser tab. The image analysis is measuring real pixels, the OCR is really reading the receipt, and the EXIF timestamp really is parsed out of the JPEG bytes. The <strong>Under the hood</strong> panel shows the numbers behind every guess as you go. What is honest heuristic and what a shipping build would replace is spelled out at the bottom of the page.
+                Everything below runs in this browser tab &mdash; including both models. The image analysis is measuring real pixels, the OCR is really reading the receipt, the EXIF timestamp really is parsed out of the JPEG bytes, and switching on the vision model runs CLIP locally rather than calling anything. Nothing is uploaded and there is no API key involved. The <strong>Under the hood</strong> panel shows the numbers behind every guess as you go, and what is honest heuristic versus what a shipping build would replace is spelled out at the bottom of the page.
             </div>
         </div>
 
@@ -203,6 +203,13 @@
                             <input type="datetime-local" id="time-input">
                         </div>
                     </div>
+                    <label class="model-toggle" for="model-toggle">
+                        <input type="checkbox" id="model-toggle">
+                        <span>
+                            <strong>Use the local vision model (CLIP)</strong>
+                            Runs in your browser via Transformers.js &mdash; no key, no server, nothing uploaded. Downloads about 90&nbsp;MB the first time, then it&rsquo;s cached. Off by default; the heuristics work without it.
+                        </span>
+                    </label>
                     <div class="context-foot" id="context-foot"></div>
                     <button class="btn btn-ghost" id="reset-learning" style="padding:6px 0;font-size:13px;">Forget what it has learned</button>
                 </div>
@@ -256,6 +263,16 @@
             </ul>
             <p>All of it lands in the same ranking as the amount path, as extra evidence rather than as an override. That is what lets a picture of a plate of food still produce a sensible merchant: no text, no logo, nothing to read — but you are 80 feet from a restaurant you eat at every Thursday.</p>
 
+            <h3>The vision model, and why it is a toggle</h3>
+            <p>The heuristic classifier above is measuring real things, but it is still a pile of hand-tuned ramps, and the brand-palette matcher is openly a stand-in for logo recognition. Switching on <strong>Use the local vision model</strong> adds the real version of both: <a href="https://openai.com/research/clip">CLIP</a> running in the browser through <a href="https://huggingface.co/docs/transformers.js">Transformers.js</a> — ONNX weights on WebGPU or WASM, quantised to about 90&nbsp;MB, cached after the first run. No API key, no server, nothing leaving the page. That last part is why it is the right fit here rather than a hosted model: this is a static site, and any key shipped in client-side JavaScript is a public key.</p>
+            <p>It is zero-shot, so there is no training step. CLIP embeds the image and a list of candidate captions into the same space and scores their similarity, which buys two things the pixel statistics cannot reach:</p>
+            <ul>
+                <li><strong>A classification that understands content rather than contrast.</strong> Several captions map onto each of the four kinds and their scores are summed — CLIP always picks the best caption from the list it is given, so the list has to span the space; there is no &ldquo;none of the above&rdquo; to fall back on.</li>
+                <li><strong>A category read straight off a photo with no text in it.</strong> A plate of food is &ldquo;a restaurant meal&rdquo; to CLIP at about 74%, and nothing else in this prototype can reach that conclusion. It is fed into the category scoring only for photos of places and things — on a receipt the printed words are far better evidence than the paper&rsquo;s appearance.</li>
+            </ul>
+            <p>The heuristic verdict is never thrown away. The two are combined as a weighted geometric mean — 65% model, 35% rules — geometric rather than arithmetic so that a kind either side considers near-impossible stays near-impossible, which is the behaviour you want when one of them is confidently wrong. The inspector shows all three columns, which is the interesting comparison anyway: on the bag of dog food the rules hedge at 55% product with an uncomfortable 30% on <em>receipt</em>, and the model pulls it to 75%.</p>
+            <p>It is off by default and the flow is complete without it, because a 90&nbsp;MB download is not a reasonable thing to spend on someone&rsquo;s behalf before they have decided they care.</p>
+
             <h3>Confidence is part of the interface</h3>
             <p>Filling a field in silently is how assisted entry earns distrust: one wrong merchant that the user did not notice, and they start checking all six fields every time — which is worse than typing them. So every field states its source and its confidence, low-confidence answers push their alternates onto the screen unprompted rather than hiding them behind a tap, and the one field the app cannot infer is marked <em>needed</em> instead of being quietly defaulted to zero. Correcting a category writes a rule against that merchant, and the app says so.</p>
 
@@ -265,6 +282,7 @@
                     <h4>Genuinely working</h4>
                     <ul>
                         <li>Image classification from measured pixel statistics — histogram, row-projection text-line detection, Sobel edge density, sky and subject separation</li>
+                        <li>CLIP zero-shot classification and visual category inference, running locally on ONNX weights, blended with the heuristics</li>
                         <li>OCR via tesseract.js, with preprocessing, and a graceful fallback when the CDN is unreachable</li>
                         <li>Receipt parsing: totals, tax, tip, line items, card, printed date and time</li>
                         <li>EXIF parsing written from scratch against the JPEG bytes — capture time, GPS, camera model</li>
@@ -274,14 +292,24 @@
                 <div>
                     <h4>Stood in for</h4>
                     <ul>
-                        <li>Logo and brand recognition. Palette matching in CIELAB is a stand-in for a hosted vision model, and it is deliberately capped at 68% confidence because a red building is evidence for Target <em>and</em> CVS <em>and</em> Trader Joe&rsquo;s</li>
+                        <li>Named-brand logo recognition. CLIP identifies <em>what kind of shop</em> but not <em>which branch of which chain</em>; palette matching in CIELAB fills that gap and is deliberately capped at 68% confidence, because a red building is evidence for Target <em>and</em> CVS <em>and</em> Trader Joe&rsquo;s</li>
                         <li>Location, which is a picker rather than CoreLocation so the flow can be demonstrated from a desk</li>
                         <li>The category list and two months of history, generated deterministically instead of read from a real budget</li>
                         <li>The merchant directory, which would be a places API plus the user&rsquo;s own transaction history</li>
-                        <li>The short pauses between steps on the analysing screen, which are there to make the sequence legible — the OCR pass is the only genuinely slow part</li>
+                        <li>The short pauses between steps on the analysing screen, which are there to make the sequence legible — OCR and the model download are the only genuinely slow parts</li>
                     </ul>
                 </div>
             </div>
+
+            <h2>What a shipping build should actually use</h2>
+            <p>The local model is the right answer for a static page with no backend, and it is a genuinely capable one. It is not the right answer for a product. A hosted vision model reads a receipt in a single call — classify the image, transcribe the text, pull the line items, and propose a category — where this prototype needs a classifier, an OCR engine, a hand-written parser, a keyword table and a fuzzy matcher chained together, each with its own failure mode. It also handles the cases that break every step of that chain: a crumpled receipt at an angle, a faded thermal print, a handwritten total, a language the parser has never seen.</p>
+            <p>The concrete shape, with today&rsquo;s Claude API: one request carrying the photo plus a JSON schema via <code>output_config.format</code>, which constrains the response to that schema rather than hoping for parseable JSON. The schema <em>is</em> the transaction record — merchant, total, tax, tip, line items, timestamp, proposed category from the user&rsquo;s own list, and a per-field confidence so the interface above keeps working exactly as it does now.</p>
+            <ul>
+                <li><strong>Model.</strong> <code>claude-haiku-4-5</code> at $1/$5 per million tokens is the volume workhorse; <code>claude-sonnet-5</code> at $3/$15 (introductory $2/$10 through 31 August 2026) is the accuracy step up. Both read images; Sonnet&nbsp;5 supports high-resolution input up to 2576&nbsp;px on the long edge, which is what a phone photo of small thermal print actually needs.</li>
+                <li><strong>Cost.</strong> A receipt photo is roughly 1,600–4,800 input tokens depending on resolution, plus a short prompt and a few hundred output tokens. Call it ~$0.004 per receipt on Haiku, ~$0.011 on Sonnet&nbsp;5. At thirty receipts a month that is about <strong>12&cent; or 33&cent; per user per month</strong> — comfortably inside a subscription budget, and the prompt caches, so the schema and instructions are billed at a tenth after the first call.</li>
+                <li><strong>The one piece of infrastructure it needs.</strong> The API key cannot live in the app. It needs a thin serverless proxy — a Cloudflare Worker or equivalent — that holds the key, rate-limits per user and forwards the image. That is the entire backend, and it is the reason this page does it locally instead.</li>
+            </ul>
+            <p>The sensible production build runs both: the local heuristics for the instant, free, offline first pass, and the hosted model when the picture is hard or the user asks for a second opinion. That is the same fallback architecture this prototype already has — it is just that here the cheap path is the only path.</p>
             <p>The sample images are drawn to a canvas at load time rather than shipped as files, which is worth mentioning because it is the reason the demo is honest: the pipeline gets real JPEG bytes and real pixels, so the receipt really is being read rather than replayed from a fixture. The sample storefront carries an EXIF block written by hand into the file, which the parser then has to find on its own.</p>
         </div>
     </main>
@@ -289,6 +317,7 @@
     <footer>Philadelphia, PA &middot; <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a> &middot; <a href="tel:4848855603">484-885-5603</a></footer>
 
     <script src="assets/data.js"></script>
+    <script src="assets/clip.js"></script>
     <script src="assets/vision.js"></script>
     <script src="assets/infer.js"></script>
     <script src="assets/samples.js"></script>

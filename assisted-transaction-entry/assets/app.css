@@ -545,6 +545,33 @@
 .context-row > div { flex: 1 1 160px; }
 .context-foot { margin-top: 10px; font-size: 0.92em; line-height: 1.5; }
 
+/* Scoped past `.context-bar label`, which is the section-heading style and
+   would otherwise force this block and bold on the whole control. */
+.context-bar label.model-toggle {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  margin: 12px 0 0;
+  padding-top: 11px;
+  border-top: 1px solid #ece4cd;
+  cursor: pointer;
+  font-size: 0.94em;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.context-bar label.model-toggle input {
+  margin: 3px 0 0;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+.context-bar label.model-toggle strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
 /* ---------------- inspector ---------------- */
 
 .inspector {

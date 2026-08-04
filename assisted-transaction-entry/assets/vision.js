@@ -11,9 +11,10 @@
         Reconciling evidence into a transaction is infer.js's job.
 
    Everything here runs client-side. The classifier and the palette
-   matcher are honest heuristics over real pixel data, not a stand-in
-   for a call to a hosted vision model — which is what a shipping build
-   would use for step 1 and for logo recognition.
+   matcher are honest heuristics over real pixel data — cheap, instant,
+   and always available. Turning on the local CLIP model in clip.js
+   blends a learned second opinion into step 1 and adds a category read
+   straight off the picture; see that file for how the two combine.
 ------------------------------------------------------------------- */
 
 (function () {
@@ -809,9 +810,11 @@
    * @param {HTMLImageElement} img decoded image
    * @param {ArrayBuffer|null} buffer original bytes, for EXIF
    * @param {(stage:string, detail?:string)=>void} report progress callback
+   * @param {{useModel?:boolean}} options opt-in to the local vision model
    */
-  async function analyseImage(img, buffer, report) {
+  async function analyseImage(img, buffer, report, options) {
     const say = report || function () {};
+    options = options || {};
 
     say('measuring', 'Reading pixels');
     const canvas = drawToCanvas(img, 640);
@@ -819,6 +822,31 @@
 
     say('classifying', 'Working out what this is');
     const classification = classifyImage(features);
+
+    // Optional second opinion from CLIP. The heuristic verdict above is
+    // never discarded — the two are blended, and both are reported, so the
+    // inspector can show where they disagreed.
+    let model = null, modelError = null;
+    if (options.useModel && window.ClipVision) {
+      say('model', 'Asking the vision model');
+      try {
+        model = await window.ClipVision.classify(canvas, (loaded, backend) => {
+          say('model', 'Downloading the model — ' + Math.round(loaded * 100) + '% (' + backend + ')');
+        });
+        classification.heuristicProbabilities = Object.assign({}, classification.probabilities);
+        classification.modelProbabilities = model.kinds;
+        classification.probabilities = window.ClipVision.blend(classification.probabilities, model.kinds);
+        const ranked = Object.keys(classification.probabilities)
+          .sort((a, b) => classification.probabilities[b] - classification.probabilities[a]);
+        classification.kind = ranked[0];
+        classification.runnerUp = ranked[1];
+        classification.label = KINDS[classification.kind];
+        classification.confidence = classification.probabilities[classification.kind];
+        classification.source = 'heuristics + CLIP';
+      } catch (err) {
+        modelError = err.message || String(err);
+      }
+    }
 
     const exif = buffer ? readExif(buffer) : null;
     if (exif && (exif.capturedAt || exif.gps)) say('exif', 'Found camera metadata');
@@ -847,6 +875,7 @@
 
     return {
       features, classification, exif, palette, ocr, ocrError, receipt, textMerchants,
+      model, modelError,
       previewUrl: canvas.toDataURL('image/jpeg', 0.8)
     };
   }

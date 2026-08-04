@@ -273,6 +273,27 @@
       why.push({ kind: 'text', text: 'Saw ' + fromText.hits[id].slice(0, 3).map(w => '“' + w + '”').join(', ') + ' in the text' });
     });
 
+    // What the picture itself looks like, when the vision model has run.
+    // Only worth consulting on photos of places and things: on a receipt
+    // the printed words are far better evidence than the paper's appearance.
+    if (opts.visualCategories) {
+      Object.entries(opts.visualCategories)
+        .filter(([, score]) => score > 0.18)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 2)
+        .forEach(([id, score], rank) => {
+          if (!D.CATEGORY_BY_ID[id]) return;
+          add(id, 2.6 * score * (rank === 0 ? 1 : 0.5));
+          if (rank === 0) {
+            why.push({
+              kind: 'vision',
+              text: 'The photo looks like ' + D.CATEGORY_BY_ID[id].name.toLowerCase() +
+                    ' (' + Math.round(score * 100) + '%)'
+            });
+          }
+        });
+    }
+
     const fromContext = scoreCategoriesFromContext(amount, at);
     Object.entries(fromContext).forEach(([id, v]) => add(id, v));
     if (!merchant && !Object.keys(fromText.scores).length && Object.keys(fromContext).length) {
@@ -447,7 +468,9 @@
     const ocrText = a.ocr ? a.ocr.text : '';
     const category = inferCategory({
       merchant: top.merchant, merchantConfidence,
-      amount, at, text: itemText + ' ' + ocrText + ' ' + (opts.note || ''), overrides
+      amount, at, text: itemText + ' ' + ocrText + ' ' + (opts.note || ''), overrides,
+      visualCategories: a.model && (kind === 'product' || kind === 'storefront')
+        ? a.model.categories : null
     });
 
     if (a.ocrError) {
