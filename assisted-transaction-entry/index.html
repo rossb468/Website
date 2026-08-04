@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assisted Transaction Entry – Ross Bower</title>
+    <meta name="description" content="A prototype budget-app flow: enter an amount or a photo, and the app fills in the merchant, category and time — showing its reasoning for each.">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+    <div class="title-bar">
+        <div class="title-inner">
+            <div class="title-text">
+                <h1>Ross Bower</h1>
+                <div class="contact-info">
+                    <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a>
+                    <span class="contact-sep">&middot;</span>
+                    <a href="tel:4848855603">484-885-5603</a>
+                </div>
+                <p class="bio">UX Engineer with more than ten years of experience building high quality interfaces and experiences, specializing in animation design, performance optimization, and human factors</p>
+                <div class="contact-links">
+                    <a href="../index.html">Home</a>
+                    <a href="../research.html">Research</a>
+                    <a href="../photography/index.html">Photos</a>
+                    <a href="https://github.com/rossb468">GitHub</a>
+                </div>
+            </div>
+            <img src="../images/ross-bower.jpg" alt="Ross Bower" class="profile-photo">
+        </div>
+    </div>
+
+    <main>
+        <div class="proto-intro">
+            <h1>Assisted Transaction Entry</h1>
+            <h3>A budget app that asks for one thing and works out the rest</h3>
+            <p>Manual expense tracking dies on the friction of the entry form. Six fields — amount, merchant, category, date, time, note — and five of them are things the phone could already have worked out. Every one you make somebody type is another chance for them to stop bothering.</p>
+            <p>This prototype inverts that. You give it the smallest piece of information you have: four digits on a keypad, or a photo. It fills in everything else, tells you where each answer came from and how sure it is, and keeps every field one tap from being changed. The only thing it will insist on is an amount it genuinely cannot see.</p>
+            <div class="proto-note">
+                Everything below runs in this browser tab. The image analysis is measuring real pixels, the OCR is really reading the receipt, and the EXIF timestamp really is parsed out of the JPEG bytes. The <strong>Under the hood</strong> panel shows the numbers behind every guess as you go. What is honest heuristic and what a shipping build would replace is spelled out at the bottom of the page.
+            </div>
+        </div>
+
+        <div class="proto-stage">
+            <div class="stage-device">
+                <div class="phone">
+                    <div class="phone-screen">
+                        <div class="status-bar">
+                            <span id="clock">9:41 AM</span>
+                            <span class="status-right"><span>&#9679;&#9679;&#9679;</span><span>&#9646;&#9646;</span></span>
+                        </div>
+
+                        <!-- ---------- home ---------- -->
+                        <div class="screen active no-scroll" id="screen-home">
+                            <div class="home-scroll">
+                                <div class="app-head">
+                                    <div class="app-month" id="month-label">Spending</div>
+                                    <div class="app-spend" id="month-spend">$0.00</div>
+                                    <div class="budget-bar"><i id="budget-fill"></i></div>
+                                    <div class="head-row">
+                                        <span id="budget-left">&nbsp;</span>
+                                        <span id="budget-day">&nbsp;</span>
+                                    </div>
+                                </div>
+                                <div class="list-label">Recent</div>
+                                <div id="tx-list"></div>
+                            </div>
+
+                            <div class="dock">
+                                <div class="dock-amount empty" id="dock-amount"><span class="cur">$</span>0.00</div>
+                                <div class="keypad">
+                                    <button class="key" data-key="1">1</button>
+                                    <button class="key" data-key="2">2</button>
+                                    <button class="key" data-key="3">3</button>
+                                    <button class="key" data-key="4">4</button>
+                                    <button class="key" data-key="5">5</button>
+                                    <button class="key" data-key="6">6</button>
+                                    <button class="key" data-key="7">7</button>
+                                    <button class="key" data-key="8">8</button>
+                                    <button class="key" data-key="9">9</button>
+                                    <button class="key" data-key="clear">C</button>
+                                    <button class="key" data-key="0">0</button>
+                                    <button class="key" data-key="back">&#9003;</button>
+                                </div>
+                                <div class="dock-actions">
+                                    <button class="btn btn-primary" id="btn-add" disabled>Add</button>
+                                    <button class="btn btn-camera" id="btn-camera" title="Add from a photo">&#128247;</button>
+                                </div>
+                                <div class="dock-hint">Type an amount, or start from a picture</div>
+                            </div>
+                        </div>
+
+                        <!-- ---------- capture ---------- -->
+                        <div class="screen" id="screen-capture">
+                            <div class="screen-pad">
+                                <button class="btn btn-ghost" id="btn-capture-back" style="padding:0 0 10px;font-size:15px;">&larr; Back</button>
+                                <div class="screen-title">Start from a picture</div>
+                                <div class="screen-sub">Anything works. The app figures out what it is looking at first, then decides what that kind of picture is good for.</div>
+                                <div class="sample-grid" id="sample-grid"></div>
+                                <div class="upload-zone" id="upload-zone">
+                                    <strong>Use your own photo</strong>
+                                    <span>Drop an image here or tap to choose &middot; a JPEG with EXIF will show more</span>
+                                </div>
+                                <input type="file" id="file-input" accept="image/*" hidden>
+                            </div>
+                        </div>
+
+                        <!-- ---------- analysing ---------- -->
+                        <div class="screen" id="screen-analysing">
+                            <div class="analysing">
+                                <div class="analysing-preview" id="analysing-preview"></div>
+                                <div class="screen-title">Working it out</div>
+                                <div class="screen-sub" id="analysing-caption"></div>
+                                <ul class="steps" id="steps" style="margin-top:14px;"></ul>
+                            </div>
+                        </div>
+
+                        <!-- ---------- review ---------- -->
+                        <div class="screen" id="screen-review">
+                            <div class="review-hero">
+                                <div class="review-kicker" id="review-kicker">Ready to save</div>
+                                <input class="review-amount" id="review-amount" inputmode="decimal" placeholder="Tap to enter">
+                                <div class="field-why" id="amount-why" style="margin-top:2px;"></div>
+                            </div>
+
+                            <button class="field" id="field-merchant">
+                                <span class="field-icon">&#127978;</span>
+                                <span class="field-body">
+                                    <span class="field-label">Merchant</span>
+                                    <span class="field-value"></span>
+                                    <span class="field-why"></span>
+                                </span>
+                                <span class="field-chevron">&rsaquo;</span>
+                            </button>
+                            <div class="alternates" id="merchant-alternates"></div>
+
+                            <button class="field" id="field-category">
+                                <span class="field-icon">&#10067;</span>
+                                <span class="field-body">
+                                    <span class="field-label">Category</span>
+                                    <span class="field-value"></span>
+                                    <span class="field-why"></span>
+                                </span>
+                                <span class="field-chevron">&rsaquo;</span>
+                            </button>
+                            <div class="alternates" id="category-alternates"></div>
+
+                            <button class="field" id="field-when">
+                                <span class="field-icon">&#128337;</span>
+                                <span class="field-body">
+                                    <span class="field-label">When</span>
+                                    <span class="field-value"></span>
+                                    <span class="field-why"></span>
+                                </span>
+                                <span class="field-chevron">&rsaquo;</span>
+                            </button>
+
+                            <div class="field" style="cursor:text;">
+                                <span class="field-icon">&#9998;</span>
+                                <span class="field-body">
+                                    <span class="field-label">Note</span>
+                                    <input class="note-input" id="note-input" placeholder="Optional">
+                                </span>
+                            </div>
+
+                            <div class="review-notes" id="review-notes"></div>
+
+                            <div class="review-actions">
+                                <button class="btn btn-secondary" id="btn-cancel">Cancel</button>
+                                <button class="btn btn-primary" id="btn-save">Save transaction</button>
+                            </div>
+                        </div>
+
+                        <!-- ---------- sheet ---------- -->
+                        <div class="sheet-backdrop" id="sheet-backdrop"></div>
+                        <div class="sheet" id="sheet">
+                            <div class="sheet-grip"></div>
+                            <div class="sheet-head">
+                                <div class="sheet-title" id="sheet-title"></div>
+                                <div class="sheet-sub" id="sheet-sub"></div>
+                            </div>
+                            <div id="sheet-body"></div>
+                            <div style="padding:12px 20px 22px;">
+                                <button class="btn btn-secondary" id="sheet-close" style="width:100%;">Close</button>
+                            </div>
+                        </div>
+
+                        <div class="toast" id="toast"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stage-side">
+                <div class="context-bar">
+                    <label>Prototype controls</label>
+                    <div class="context-row">
+                        <div>
+                            <div style="margin-bottom:4px;">Where the phone thinks it is</div>
+                            <select id="location-select"></select>
+                        </div>
+                        <div>
+                            <div style="margin-bottom:4px;">Pretend it&rsquo;s</div>
+                            <input type="datetime-local" id="time-input">
+                        </div>
+                    </div>
+                    <div class="context-foot" id="context-foot"></div>
+                    <button class="btn btn-ghost" id="reset-learning" style="padding:6px 0;font-size:13px;">Forget what it has learned</button>
+                </div>
+
+                <div class="inspector">
+                    <div class="inspector-head">
+                        <h4>Under the hood</h4>
+                        <p>Every number the app used to reach the answer on screen</p>
+                    </div>
+                    <div class="tabs">
+                        <button class="tab active" data-tab="signals">Image signals</button>
+                        <button class="tab" data-tab="ranking">Ranking</button>
+                        <button class="tab" data-tab="text">Text</button>
+                    </div>
+                    <div class="tab-panel active" id="tab-signals"></div>
+                    <div class="tab-panel" id="tab-ranking"></div>
+                    <div class="tab-panel" id="tab-text"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ---------------- write-up ---------------- -->
+
+        <div class="proto-writeup">
+            <h2>How the flow works</h2>
+
+            <h3>The amount path</h3>
+            <p>Four digits on a keypad is the whole input. From there the app has three things worth using: the clock, the phone&rsquo;s position, and two months of the user&rsquo;s own history. Each known merchant is scored as a small Bayesian problem —</p>
+            <ul>
+                <li><strong>Frequency prior.</strong> How much of this person&rsquo;s spending happens here at all.</li>
+                <li><strong>Amount fit.</strong> Past spend at each merchant is fitted as a log-normal; $6.40 is unremarkable at a coffee shop and absurd at a hardware store.</li>
+                <li><strong>Time of day.</strong> Each merchant carries an hour curve, and the history is generated from those curves rather than uniformly, so the prior it learns from is real.</li>
+                <li><strong>Distance.</strong> Presence is positive evidence, not merely the absence of a penalty. Standing at a shop&rsquo;s door is worth roughly a ninefold boost to its odds; that crosses over to a penalty around 600 feet out and falls away sharply beyond. Modelled the other way — as a likelihood that could only ever reach zero — somewhere visited fifteen times as often kept winning while the user was stood inside a shop they use twice a month.</li>
+                <li><strong>Exact recurrence.</strong> $15.49 on the 7th is not a guess, it is Netflix.</li>
+            </ul>
+            <p>The scores are log-likelihoods, summed and softmaxed. The winner fills the field, the confidence figure is that merchant&rsquo;s share of the probability mass, and the runners-up become the chips underneath — which appear on their own whenever the leader is under about 70%. Category follows from the merchant, except where the merchant is genuinely ambiguous: a $9 stop at Wawa is lunch, a $52 stop is petrol, and the rule that says so is attached to the merchant rather than hard-coded in the flow.</p>
+
+            <h3>The image path</h3>
+            <p>An arbitrary photo is not a receipt, and the flow cannot assume it is. So the first question is always <em>what am I looking at</em>, answered from pixel statistics before anything is extracted:</p>
+            <ul>
+                <li><strong>Receipt</strong> — tall crop, near-zero saturation, bright ground, and a stack of evenly spaced dark bands in the row profile with quiet margins either side.</li>
+                <li><strong>Storefront</strong> — bright blue-dominant pixels along the top edge, landscape framing, architectural edge density, one saturated colour holding a lot of area.</li>
+                <li><strong>Product</strong> — a saturated subject against a uniform border, square-ish framing, very little text.</li>
+            </ul>
+            <p>Those indicators are soft ramps rather than thresholds, weighted and softmaxed into a distribution over the four kinds, so the app can say &ldquo;91% a receipt&rdquo; or admit that it is 40/35 between a shopfront and a product shot. The verdict then decides what the rest of the pass is worth doing:</p>
+            <ul>
+                <li><strong>EXIF</strong> is parsed straight out of the JPEG in every case. <code>DateTimeOriginal</code> answers &ldquo;when&rdquo; for a photo taken hours before it was filed, and a GPS tag answers &ldquo;where&rdquo; better than the phone&rsquo;s current position does — you are usually home by the time you get round to entering it.</li>
+                <li><strong>OCR</strong> runs whenever there is text to find, which is not only on receipts: shop signage and product packaging both carry the brand name. The image is upscaled, greyscaled and contrast-stretched first, because tesseract is markedly better on a binarised slip than on a phone photo of one.</li>
+                <li><strong>Receipt parsing</strong> pulls total, subtotal, tax, tip, line items, card type and the printed timestamp, with the total keyed off the wording rather than position, and a &ldquo;largest figure on the slip&rdquo; fallback flagged at lower confidence when the keyword is missing.</li>
+                <li><strong>Brand palette matching</strong> compares the dominant colours to known brand colours in CIELAB, weighted by how vivid the match is — grey and off-white agree with half the brands in the list and are worth nothing.</li>
+            </ul>
+            <p>All of it lands in the same ranking as the amount path, as extra evidence rather than as an override. That is what lets a picture of a plate of food still produce a sensible merchant: no text, no logo, nothing to read — but you are 80 feet from a restaurant you eat at every Thursday.</p>
+
+            <h3>Confidence is part of the interface</h3>
+            <p>Filling a field in silently is how assisted entry earns distrust: one wrong merchant that the user did not notice, and they start checking all six fields every time — which is worse than typing them. So every field states its source and its confidence, low-confidence answers push their alternates onto the screen unprompted rather than hiding them behind a tap, and the one field the app cannot infer is marked <em>needed</em> instead of being quietly defaulted to zero. Correcting a category writes a rule against that merchant, and the app says so.</p>
+
+            <h2>What is real here, and what a shipping build would change</h2>
+            <div class="honest">
+                <div>
+                    <h4>Genuinely working</h4>
+                    <ul>
+                        <li>Image classification from measured pixel statistics — histogram, row-projection text-line detection, Sobel edge density, sky and subject separation</li>
+                        <li>OCR via tesseract.js, with preprocessing, and a graceful fallback when the CDN is unreachable</li>
+                        <li>Receipt parsing: totals, tax, tip, line items, card, printed date and time</li>
+                        <li>EXIF parsing written from scratch against the JPEG bytes — capture time, GPS, camera model</li>
+                        <li>The merchant ranking, the category scoring, distance maths and the learned corrections</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Stood in for</h4>
+                    <ul>
+                        <li>Logo and brand recognition. Palette matching in CIELAB is a stand-in for a hosted vision model, and it is deliberately capped at 68% confidence because a red building is evidence for Target <em>and</em> CVS <em>and</em> Trader Joe&rsquo;s</li>
+                        <li>Location, which is a picker rather than CoreLocation so the flow can be demonstrated from a desk</li>
+                        <li>The category list and two months of history, generated deterministically instead of read from a real budget</li>
+                        <li>The merchant directory, which would be a places API plus the user&rsquo;s own transaction history</li>
+                        <li>The short pauses between steps on the analysing screen, which are there to make the sequence legible — the OCR pass is the only genuinely slow part</li>
+                    </ul>
+                </div>
+            </div>
+            <p>The sample images are drawn to a canvas at load time rather than shipped as files, which is worth mentioning because it is the reason the demo is honest: the pipeline gets real JPEG bytes and real pixels, so the receipt really is being read rather than replayed from a fixture. The sample storefront carries an EXIF block written by hand into the file, which the parser then has to find on its own.</p>
+        </div>
+    </main>
+
+    <footer>Philadelphia, PA &middot; <a href="mailto:rossb468@gmail.com">rossb468@gmail.com</a> &middot; <a href="tel:4848855603">484-885-5603</a></footer>
+
+    <script src="assets/data.js"></script>
+    <script src="assets/vision.js"></script>
+    <script src="assets/infer.js"></script>
+    <script src="assets/samples.js"></script>
+    <script src="assets/app.js"></script>
+</body>
+</html>
