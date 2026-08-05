@@ -1,0 +1,6 @@
+node_modules/
+recon/
+data/campsites.json
+data/campsites.raw.json
+data/unmapped.json
+data/harvest-state.json

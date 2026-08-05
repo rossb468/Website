@@ -1,0 +1,17 @@
+{
+  "name": "freecampsites-search",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Reverse-engineer the freecampsites.net data API, harvest it locally, and search it with an interface that doesn't get in the way.",
+  "scripts": {
+    "discover": "node tools/discover.mjs",
+    "discover:watch": "node tools/discover.mjs --headed",
+    "harvest": "node tools/harvest.mjs",
+    "build": "node tools/build-index.mjs",
+    "serve": "python3 -m http.server 8080"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}

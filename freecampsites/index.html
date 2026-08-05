@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campsite Search — a better front end for freecampsites.net data</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-title">
+    <h1>Campsite Search</h1>
+    <span class="appbar-sub">a usable front end for freecampsites.net data</span>
+  </div>
+  <div class="appbar-status" id="status">loading…</div>
+  <a class="appbar-home" href="../index.html">← rossbower.com</a>
+</header>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <input id="q" type="search" placeholder="Search names, towns, descriptions…  (press /)" autocomplete="off">
+    <button id="clear-q" class="icon-btn" title="Clear" hidden>×</button>
+  </div>
+  <label class="tb-field">
+    Sort
+    <select id="sort">
+      <option value="relevance">Best match</option>
+      <option value="rating">Highest rated</option>
+      <option value="reviews">Most reviewed</option>
+      <option value="recent">Recently reviewed</option>
+      <option value="elevation-desc">Highest elevation</option>
+      <option value="elevation-asc">Lowest elevation</option>
+      <option value="price">Cheapest</option>
+      <option value="distance">Nearest to pin</option>
+    </select>
+  </label>
+  <label class="tb-check">
+    <input type="checkbox" id="bbox-only"> Only in map view
+  </label>
+  <span class="tb-count" id="count"></span>
+  <button id="reset" class="text-btn">Reset filters</button>
+</div>
+
+<main class="layout">
+
+  <aside class="filters" id="filters">
+    <section class="fgroup">
+      <h2>Cost</h2>
+      <label class="check"><input type="checkbox" id="free-only"> Free sites only</label>
+      <label class="range-row">Max nightly price
+        <input type="range" id="max-price" min="0" max="60" step="5" value="60">
+        <output id="max-price-out">any</output>
+      </label>
+    </section>
+
+    <section class="fgroup">
+      <h2>Reviews</h2>
+      <label class="range-row">Minimum rating
+        <input type="range" id="min-rating" min="0" max="5" step="0.5" value="0">
+        <output id="min-rating-out">any</output>
+      </label>
+      <label class="range-row">Minimum review count
+        <input type="range" id="min-reviews" min="0" max="50" step="1" value="0">
+        <output id="min-reviews-out">any</output>
+      </label>
+      <label class="range-row">Reviewed since
+        <select id="reviewed-since">
+          <option value="">any time</option>
+          <option value="365">last year</option>
+          <option value="730">last 2 years</option>
+          <option value="1825">last 5 years</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="fgroup">
+      <h2>Amenities</h2>
+      <div class="chips" id="amenity-chips">
+        <button class="chip" data-amenity="toilets">Toilets</button>
+        <button class="chip" data-amenity="water">Water</button>
+        <button class="chip" data-amenity="trash">Trash</button>
+        <button class="chip" data-amenity="showers">Showers</button>
+        <button class="chip" data-amenity="picnicTables">Tables</button>
+        <button class="chip" data-amenity="fireRings">Fire rings</button>
+        <button class="chip" data-amenity="pets">Pets OK</button>
+        <button class="chip" data-amenity="rv">RV access</button>
+      </div>
+      <p class="hint">Chips require the amenity to be present. Sites that never
+      reported it are excluded.</p>
+    </section>
+
+    <section class="fgroup">
+      <h2>Cell signal</h2>
+      <label class="range-row">Carrier
+        <select id="carrier">
+          <option value="">don't care</option>
+          <option value="verizon">Verizon</option>
+          <option value="att">AT&amp;T</option>
+          <option value="tmobile">T-Mobile</option>
+        </select>
+      </label>
+      <label class="range-row">Minimum bars
+        <input type="range" id="min-bars" min="0" max="4" step="1" value="0">
+        <output id="min-bars-out">any</output>
+      </label>
+    </section>
+
+    <section class="fgroup">
+      <h2>Site</h2>
+      <label class="range-row">Elevation (ft)
+        <span class="dual">
+          <input type="number" id="elev-min" placeholder="min" step="500">
+          <input type="number" id="elev-max" placeholder="max" step="500">
+        </span>
+      </label>
+      <label class="range-row">Minimum stay limit (nights)
+        <input type="range" id="min-stay" min="0" max="30" step="1" value="0">
+        <output id="min-stay-out">any</output>
+      </label>
+      <label class="range-row">State
+        <select id="state"><option value="">all states</option></select>
+      </label>
+      <label class="range-row">Type
+        <select id="type"><option value="">all types</option></select>
+      </label>
+    </section>
+
+    <section class="fgroup">
+      <h2>Distance</h2>
+      <p class="hint" id="pin-hint">Shift-click the map to drop a pin, then filter
+      and sort by distance from it.</p>
+      <label class="range-row">Within (miles)
+        <input type="range" id="radius" min="10" max="500" step="10" value="500">
+        <output id="radius-out">any</output>
+      </label>
+      <button id="clear-pin" class="text-btn" hidden>Remove pin</button>
+    </section>
+  </aside>
+
+  <section class="results" id="results-pane">
+    <ol class="result-list" id="result-list"></ol>
+    <button id="show-more" class="show-more" hidden>Show more</button>
+    <div class="empty" id="empty" hidden></div>
+  </section>
+
+  <section class="mapwrap">
+    <div id="map"></div>
+    <div class="map-note" id="map-note" hidden></div>
+  </section>
+
+</main>
+
+<aside class="detail" id="detail" hidden aria-live="polite">
+  <button class="detail-close" id="detail-close" title="Close (Esc)">×</button>
+  <div id="detail-body"></div>
+</aside>
+
+<div class="loader" id="loader">
+  <div class="loader-card">
+    <h2>No dataset loaded</h2>
+    <p>This page reads <code>data/campsites.json</code>, produced by the harvest
+    pipeline in <code>tools/</code>. See the README for the three commands.</p>
+    <p>You can also load a harvested file directly:</p>
+    <input type="file" id="file-input" accept="application/json">
+    <p class="loader-alt"><button id="load-sample" class="text-btn">Load sample data instead</button>
+    — six hand-written fixtures, enough to see the interface work.</p>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
