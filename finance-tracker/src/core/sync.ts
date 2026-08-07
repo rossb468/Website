@@ -132,7 +132,14 @@ export class SyncEngine {
         description: needsReauth ? 'Connection needs re-authentication' : 'Sync failed',
         pending: null,
         changes: null,
-        metadata: { error: message, needsReauth, trigger },
+        metadata: {
+          error: message,
+          needsReauth,
+          trigger,
+          // markSyncError has already incremented this. The dispatcher uses
+          // it to back off repeated alerts during a prolonged outage.
+          consecutiveErrors: this.repos.items.get(itemId)?.consecutive_errors ?? 1,
+        },
         syncRunId: runId,
       });
       events.push(errorEvent);

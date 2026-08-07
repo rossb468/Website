@@ -56,4 +56,7 @@ export const DEFAULT_NOTIFY_TYPES: EventType[] = [
   'transaction.posted',
   'transaction.vanished',
   'transaction.removed',
+  // A tracker that has silently stopped working looks exactly like an account
+  // with no activity, so connection failures have to be audible.
+  'sync.error',
 ];

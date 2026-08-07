@@ -75,8 +75,14 @@ export class NotificationDispatcher {
     if (!this.types.has(event.type)) return false;
 
     // Connection failures are account-independent but always worth knowing:
-    // a silent tracker looks exactly like a quiet account.
-    if (event.type === 'sync.error') return true;
+    // a silent tracker looks exactly like a quiet account. An institution
+    // that is down for hours would otherwise alert on every poll, so back the
+    // alerts off exponentially — failure 1, 2, 4, 8, … — which reports the
+    // problem promptly and then stops shouting about it.
+    if (event.type === 'sync.error') {
+      const attempt = typeof event.metadata?.consecutiveErrors === 'number' ? event.metadata.consecutiveErrors : 1;
+      return attempt <= 1 || (attempt & (attempt - 1)) === 0;
+    }
 
     if (!event.accountId) return false;
     const account = this.repos.accounts.get(event.accountId);
