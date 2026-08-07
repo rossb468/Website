@@ -1,2 +1,6 @@
 *.DS_Store
 Generator/
+
+# Node build artifacts and tool caches, from any project directory
+node_modules/
+.vite/
