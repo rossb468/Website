@@ -55,6 +55,25 @@ export class ProviderCursorInvalid extends Error {
   }
 }
 
+/**
+ * The app's own credentials are wrong — not the user's bank connection.
+ *
+ * Distinct from every other provider error because retrying cannot fix it:
+ * no amount of backoff turns a wrong secret into a right one. It needs a
+ * human to edit a config file, so it is surfaced loudly and the scheduler
+ * stops hammering the API until it is.
+ */
+export class ProviderConfigError extends Error {
+  constructor(
+    message: string,
+    /** What the operator should actually do about it. */
+    readonly remedy: string,
+  ) {
+    super(message);
+    this.name = 'ProviderConfigError';
+  }
+}
+
 /** Provider is rate limiting us; back off and retry later. */
 export class ProviderRateLimited extends Error {
   constructor(

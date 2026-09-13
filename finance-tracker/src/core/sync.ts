@@ -6,7 +6,12 @@ import type { CanonicalAccount, CanonicalTransaction, LedgerEvent, NewLedgerEven
 import { amountDelta, diffTransactions } from './diff.js';
 import { findBestMatch } from './matcher.js';
 import { logger } from '../logger.js';
-import { ProviderCursorInvalid, ProviderReauthRequired, type FinancialDataProvider } from '../providers/types.js';
+import {
+  ProviderConfigError,
+  ProviderCursorInvalid,
+  ProviderReauthRequired,
+  type FinancialDataProvider,
+} from '../providers/types.js';
 
 export interface SyncOptions {
   itemId: string;
@@ -115,6 +120,14 @@ export class SyncEngine {
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       const needsReauth = err instanceof ProviderReauthRequired;
+      const configError = err instanceof ProviderConfigError ? err : undefined;
+
+      if (configError) {
+        // Not the bank's fault and not the connection's — our own credentials
+        // are wrong. Say so once, prominently, with the fix.
+        logger.fatal({ itemId }, `Plaid credentials rejected: ${configError.remedy}`);
+      }
+
       this.repos.items.markSyncError(itemId, message, needsReauth);
       this.repos.runs.finish(runId, { ok: false, added, modified, removed, events: events.length, pages, error: message });
 
@@ -129,12 +142,17 @@ export class SyncEngine {
         amount: null,
         amountDelta: null,
         currency: null,
-        description: needsReauth ? 'Connection needs re-authentication' : 'Sync failed',
+        description: configError
+          ? 'Plaid credentials rejected — check PLAID_SECRET matches PLAID_ENV'
+          : needsReauth
+            ? 'Connection needs re-authentication'
+            : 'Sync failed',
         pending: null,
         changes: null,
         metadata: {
           error: message,
           needsReauth,
+          ...(configError ? { configError: true, remedy: configError.remedy } : {}),
           trigger,
           // markSyncError has already incremented this. The dispatcher uses
           // it to back off repeated alerts during a prolonged outage.

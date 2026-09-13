@@ -13,6 +13,7 @@ import { toMinorUnits } from '../core/money.js';
 import type { Config } from '../config.js';
 import { logger } from '../logger.js';
 import {
+  ProviderConfigError,
   ProviderCursorInvalid,
   ProviderRateLimited,
   ProviderReauthRequired,
@@ -168,11 +169,15 @@ export class PlaidProvider implements FinancialDataProvider {
 
   /** Fetch item metadata so we can store the real item_id and institution. */
   async getItemInfo(accessToken: string): Promise<{ itemId: string; institutionId: string | null }> {
-    const res = await this.client.itemGet({ access_token: accessToken });
-    return {
-      itemId: res.data.item.item_id,
-      institutionId: res.data.item.institution_id ?? null,
-    };
+    try {
+      const res = await this.client.itemGet({ access_token: accessToken });
+      return {
+        itemId: res.data.item.item_id,
+        institutionId: res.data.item.institution_id ?? null,
+      };
+    } catch (err) {
+      throw this.translateError(err);
+    }
   }
 
   async getInstitutionName(institutionId: string): Promise<string | null> {
@@ -188,21 +193,29 @@ export class PlaidProvider implements FinancialDataProvider {
   }
 
   async createLinkToken(userId: string, accessToken?: string): Promise<string> {
-    const res = await this.client.linkTokenCreate({
-      user: { client_user_id: userId },
-      client_name: this.config.plaidLinkClientName,
-      language: 'en',
-      country_codes: this.config.plaidCountryCodes as never,
-      // In update mode (re-auth) Plaid rejects `products`.
-      ...(accessToken ? { access_token: accessToken } : { products: this.config.plaidProducts as never }),
-      ...(this.config.publicBaseUrl ? { webhook: `${this.config.publicBaseUrl}/webhooks/plaid` } : {}),
-    });
-    return res.data.link_token;
+    try {
+      const res = await this.client.linkTokenCreate({
+        user: { client_user_id: userId },
+        client_name: this.config.plaidLinkClientName,
+        language: 'en',
+        country_codes: this.config.plaidCountryCodes as never,
+        // In update mode (re-auth) Plaid rejects `products`.
+        ...(accessToken ? { access_token: accessToken } : { products: this.config.plaidProducts as never }),
+        ...(this.config.publicBaseUrl ? { webhook: `${this.config.publicBaseUrl}/webhooks/plaid` } : {}),
+      });
+      return res.data.link_token;
+    } catch (err) {
+      throw this.translateError(err);
+    }
   }
 
   async exchangePublicToken(publicToken: string): Promise<{ accessToken: string; itemId: string }> {
-    const res = await this.client.itemPublicTokenExchange({ public_token: publicToken });
-    return { accessToken: res.data.access_token, itemId: res.data.item_id };
+    try {
+      const res = await this.client.itemPublicTokenExchange({ public_token: publicToken });
+      return { accessToken: res.data.access_token, itemId: res.data.item_id };
+    } catch (err) {
+      throw this.translateError(err);
+    }
   }
 
   /**
@@ -285,6 +298,18 @@ export class PlaidProvider implements FinancialDataProvider {
     const code = body.error_code ?? '';
     const message = body.error_message ?? code;
 
+    if (code === 'INVALID_API_KEYS' || code === 'INVALID_CLIENT_ID' || code === 'INVALID_SECRET') {
+      // By far the most common cause is the environment/secret mismatch:
+      // Plaid issues a *different* secret per environment, so flipping
+      // PLAID_ENV without also swapping PLAID_SECRET fails exactly here.
+      return new ProviderConfigError(
+        `Plaid ${code}: ${message}`,
+        `PLAID_CLIENT_ID/PLAID_SECRET were rejected for PLAID_ENV=${this.config.plaidEnv}. ` +
+          `Plaid issues a separate secret per environment — check that PLAID_SECRET is the ` +
+          `${this.config.plaidEnv} one at https://dashboard.plaid.com/developers/keys, and that ` +
+          `neither value has stray whitespace or quotes.`,
+      );
+    }
     if (code === 'ITEM_LOGIN_REQUIRED' || code === 'ITEM_LOCKED' || body.error_type === 'ITEM_ERROR') {
       return new ProviderReauthRequired(`${code}: ${message}`);
     }

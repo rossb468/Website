@@ -133,7 +133,10 @@
     });
     var payload = await res.json().catch(function () { return {}; });
     if (!res.ok) {
-      throw new Error(payload.error || ('HTTP ' + res.status));
+      var e = new Error(payload.error || ('HTTP ' + res.status));
+      // The server tells us what to actually do about config failures.
+      e.remedy = payload.remedy;
+      throw e;
     }
     return payload;
   }
@@ -197,6 +200,7 @@
     } catch (err) {
       var msg = err.message || String(err);
       log('Failed: ' + msg, 'err');
+      if (err.remedy) log(err.remedy, 'err');
       if (/unauthor|API_TOKEN/i.test(msg)) {
         log('Set the API token field above to the API_TOKEN value from your .env.');
       }

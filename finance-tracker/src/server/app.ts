@@ -9,7 +9,7 @@ import { TimelineService } from '../core/timeline.js';
 import type { NotificationDispatcher } from '../notify/dispatcher.js';
 import { WebPushNotifier } from '../notify/channels/webpush.js';
 import { PlaidProvider } from '../providers/plaid.js';
-import type { FinancialDataProvider } from '../providers/types.js';
+import { ProviderConfigError, type FinancialDataProvider } from '../providers/types.js';
 import { logger } from '../logger.js';
 import type { EventType } from '../core/types.js';
 import { EVENT_TYPES } from '../core/types.js';
@@ -173,8 +173,12 @@ export function createApp(deps: ServerDeps): Express {
       const token = await provider.createLinkToken(String(req.body?.userId ?? 'primary-user'), accessToken);
       res.json({ linkToken: token });
     } catch (err) {
-      logger.error({ err: (err as Error).message }, 'link token creation failed');
-      res.status(502).json({ error: (err as Error).message });
+      // A credentials problem is the single most likely reason this fails, and
+      // it is the one the person staring at the page can actually fix — so
+      // pass the remedy through instead of a bare status code.
+      const remedy = err instanceof ProviderConfigError ? err.remedy : undefined;
+      logger.error({ err: (err as Error).message, remedy }, 'link token creation failed');
+      res.status(502).json({ error: (err as Error).message, remedy });
     }
   });
 
@@ -207,8 +211,9 @@ export function createApp(deps: ServerDeps): Express {
       const result = await orchestrator.syncItem(itemId, 'backfill');
       res.json({ itemId, institution: institutionName, initialEvents: result.events.length });
     } catch (err) {
-      logger.error({ err: (err as Error).message }, 'public token exchange failed');
-      res.status(502).json({ error: (err as Error).message });
+      const remedy = err instanceof ProviderConfigError ? err.remedy : undefined;
+      logger.error({ err: (err as Error).message, remedy }, 'public token exchange failed');
+      res.status(502).json({ error: (err as Error).message, remedy });
     }
   });
 
