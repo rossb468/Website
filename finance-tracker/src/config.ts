@@ -62,8 +62,10 @@ const schema = z.object({
   plaidLinkClientName: z.string().default('Finance Tracker'),
 
   pollIntervalSeconds: int(300),
-  enableTransactionsRefresh: bool(false),
-  refreshMinIntervalSeconds: int(900),
+  // Included in Plaid's free Trial plan, and the only way the ledger's time
+  // resolution matches the poll interval rather than Plaid's own cadence.
+  enableTransactionsRefresh: bool(true),
+  refreshMinIntervalSeconds: int(600),
   pendingLimboGraceHours: nonNegInt(72),
 
   notifyChannels: csv(['console']).pipe(z.array(z.enum(NOTIFY_CHANNELS))),

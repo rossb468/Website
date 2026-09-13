@@ -36,6 +36,9 @@ async function main(): Promise<void> {
       },
       'finance-tracker listening',
     );
+    if (repos.items.listAll().length === 0) {
+      logger.info(`No banks connected yet — open http://localhost:${config.port}/link to add one`);
+    }
   });
 
   scheduler.start();

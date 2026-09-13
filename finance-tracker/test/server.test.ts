@@ -156,6 +156,33 @@ describe('HTTP API', () => {
   });
 });
 
+describe('Link page', () => {
+  it('serves the connection page without a token', async () => {
+    // Must be reachable unauthenticated: it is where you go to *enter* the
+    // token, so gating it behind the token would be a deadlock.
+    const res = await fetch(`${baseUrl}/link`);
+    expect(res.status).toBe(200);
+    const html = await res.text();
+    expect(html).toContain('Connect a bank');
+    // The Plaid Link SDK must actually be loaded or the page is inert.
+    expect(html).toContain('cdn.plaid.com/link/v2/stable/link-initialize.js');
+    expect(html).toContain('/api/link/exchange');
+  });
+
+  it('redirects the root to the Link page', async () => {
+    const res = await fetch(`${baseUrl}/`, { redirect: 'manual' });
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toBe('/link');
+  });
+
+  it('reports the Plaid environment on health so the page can warn you', async () => {
+    const body = await (await fetch(`${baseUrl}/health`)).json();
+    // Mock provider: no Plaid environment to report.
+    expect(body).toHaveProperty('plaidEnv');
+    expect(body.plaidEnv).toBeNull();
+  });
+});
+
 describe('webhook endpoint', () => {
   it('accepts a valid transactions webhook and syncs', async () => {
     h.bank.authorize({ amount: -4_230, name: 'BLUE BOTTLE COFFEE' });

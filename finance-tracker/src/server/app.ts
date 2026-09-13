@@ -1,5 +1,7 @@
 import express, { type Express, type NextFunction, type Request, type Response } from 'express';
 import { timingSafeEqual } from 'node:crypto';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { Config } from '../config.js';
 import type { Repositories } from '../db/repositories.js';
 import type { Orchestrator } from '../core/orchestrator.js';
@@ -117,6 +119,19 @@ export function createApp(deps: ServerDeps): Express {
 
   app.use(express.json({ limit: '1mb' }));
 
+  // -- connect a bank -------------------------------------------------------
+
+  // Plaid Link is a browser widget, so connecting an account needs a real
+  // page to host it. Served from the app itself so there is nothing else to
+  // deploy and the page can talk to the API on the same origin.
+  // `src/server/` and `dist/server/` are both two levels below the project
+  // root, so this resolves identically under tsx and under node.
+  const publicDir = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'public');
+  app.get('/link', (_req, res) => {
+    res.sendFile(join(publicDir, 'link.html'));
+  });
+  app.get('/', (_req, res) => res.redirect('/link'));
+
   // -- health ---------------------------------------------------------------
 
   app.get('/health', (_req, res) => {
@@ -124,6 +139,9 @@ export function createApp(deps: ServerDeps): Express {
     res.json({
       status: 'ok',
       provider: provider.name,
+      // Lets the Link page warn you when you are one click from a real bank
+      // login rather than the sandbox.
+      plaidEnv: provider.name === 'plaid' ? config.plaidEnv : null,
       channels: dispatcher.channels,
       items: items.map((i) => ({
         itemId: i.item_id,

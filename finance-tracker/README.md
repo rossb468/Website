@@ -136,7 +136,7 @@ None of those deltas were reported by the provider. All were derived.
 ```bash
 npm install
 npm run cli -- demo      # full simulation, no credentials needed
-npm test                 # 81 tests
+npm test                 # 84 tests
 ```
 
 ### 2. Configure
@@ -164,27 +164,88 @@ variables, then check it end to end:
 npm run cli -- notify-test
 ```
 
-### 4. Connect a bank
+### 4. Try it against Plaid's fake bank first
 
-Sign up at [dashboard.plaid.com](https://dashboard.plaid.com) and put
-`PLAID_CLIENT_ID` / `PLAID_SECRET` in `.env` with `PROVIDER=plaid`. Start in
-`PLAID_ENV=sandbox`; production access requires a short application.
+Do this before connecting a real account. It exercises the entire production
+code path — Link, token exchange, sync, ledger, push — against Plaid's
+Sandbox, where the bank and the money are fictional.
 
-Connecting an account uses Plaid Link, which is a browser flow:
+From [dashboard.plaid.com](https://dashboard.plaid.com) → Team Settings →
+Keys, copy your `client_id` and your **Sandbox** secret (Sandbox and
+Production have different secrets):
 
 ```bash
-npm run cli -- link              # mints a Link token
+# .env
+PROVIDER=plaid
+PLAID_ENV=sandbox
+PLAID_CLIENT_ID=your_client_id
+PLAID_SECRET=your_sandbox_secret
 ```
 
-Open Link with that token, complete the bank login, and POST the public token
-it returns to `/api/link/exchange`. The server exchanges it for a durable
-access token, stores it, and runs the first sync.
-
-### 5. Run it
+Start the server and open the connect page:
 
 ```bash
-npm run dev        # server + scheduler
-# or
+npm run dev
+open http://localhost:4000/link
+```
+
+Click **Open Plaid Link**, pick any institution, and sign in with Plaid's
+Sandbox credentials:
+
+```
+username: user_good
+password: pass_good
+```
+
+The page shows a `plaid · sandbox` badge and a reminder of those credentials,
+so it is always obvious whether you are one click from a real bank login.
+
+On success the server exchanges the token, stores the connection, and runs
+the first sync. Then:
+
+```bash
+npm run cli -- accounts     # the sandbox accounts, with balances
+npm run cli -- timeline     # the ledger built from their history
+```
+
+You should see `account.added` and a run of `transaction.added` events. If
+you configured a real notification channel, your phone will have buzzed.
+
+<details>
+<summary>Simulating a pending charge that changes</summary>
+
+Sandbox accounts come with static history, so to watch the change engine work
+you need to make something change. Plaid's `/sandbox/transactions/create`
+endpoint can inject transactions into a Sandbox Item; add one as pending, sync,
+then replace it with a settled version at a different amount and sync again.
+The `transaction.posted` event will carry the delta.
+
+The simulated bank does this end to end with no API calls at all:
+
+```bash
+npm run cli -- demo
+```
+</details>
+
+### 5. Connect your real bank
+
+Once Sandbox looks right, swap to production. You need `PLAID_ENV=production`
+and your **Production** secret — the Sandbox one will not authenticate:
+
+```bash
+PLAID_ENV=production
+PLAID_SECRET=your_production_secret
+```
+
+Restart, open `/link` again, and sign in with your actual bank. The badge will
+read `plaid · production`.
+
+If a connection later goes stale, Plaid marks it `needs_reauth`; open
+`/link?itemId=<item_id>` to repair it in place without re-adding the account.
+
+### 6. Run it for real
+
+```bash
 npm run build && npm start
 ```
 
@@ -203,18 +264,35 @@ Two paths, both wired up:
 - **Polling** — every `POLL_INTERVAL_SECONDS` as a safety net, with
   exponential backoff on failure.
 
-### An important caveat about resolution
+### Why refresh matters for time resolution
 
-Plaid refreshes most Items only a few times a day on its own schedule. Webhooks
-tell you promptly when Plaid's copy changed — but not when your *bank's* copy
-changed. To actually catch a tip or a hold release close to when it happens you
-need `/transactions/refresh`, which forces a pull from the institution.
+Plaid refreshes most Items only a few times a day on its own schedule.
+Webhooks tell you promptly when *Plaid's* copy changed — but not when your
+**bank's** copy changed. To catch a tip or a hold release close to when it
+actually happens you need `/transactions/refresh`, which forces a pull from
+the institution.
 
-That endpoint is a **paid add-on on most plans**, so it is opt-in via
-`ENABLE_TRANSACTIONS_REFRESH=true` with a rate-limit floor
-(`REFRESH_MIN_INTERVAL_SECONDS`). Without it the ledger is still complete and
-correct — every change is still captured — but its time resolution is Plaid's
-refresh cadence rather than your poll interval.
+It is **included in Plaid's free Trial plan**, so
+`ENABLE_TRANSACTIONS_REFRESH` defaults to `true` with a rate-limit floor of
+10 minutes (`REFRESH_MIN_INTERVAL_SECONDS`). On some paid plans it is a
+billable add-on — set it to `false` if you would rather not be charged.
+
+Turned off, the ledger is still complete and correct; every change is still
+captured. Only its time resolution degrades, from your poll interval to
+Plaid's own refresh cadence.
+
+### What Plaid costs
+
+For a personal setup, probably nothing. Plaid offers a free **Trial plan** to
+US/Canada developers creating a team on or after April 15, 2026: 10 Production
+Items, real bank data, auto-approved, and Transactions Refresh included. An
+Item is one bank login covering every account at that institution, so 10 is
+far more than a personal tracker needs.
+
+Beyond that, Pay-as-you-go has no minimum spend. Plaid does not publish exact
+rates — they appear during the Production access request — and third-party
+reports put Transactions near $0.30 per Item per month. Verify at signup;
+these figures are secondhand.
 
 ---
 
@@ -225,7 +303,8 @@ token configured, access is restricted to loopback.
 
 | Route | Purpose |
 | --- | --- |
-| `GET /health` | Status, per-item sync state, notification stats |
+| `GET /link` | Connect a bank (Plaid Link). Unauthenticated — it's where you enter the token |
+| `GET /health` | Status, Plaid environment, per-item sync state, notification stats |
 | `GET /api/timeline` | The change ledger. Filters: `accountId`, `types`, `since`, `until`, `limit`, `beforeId`, `order` |
 | `GET /api/timeline/lifecycle/:id` | One purchase, authorization through settlement |
 | `GET /api/transactions/:id/versions` | Every observed state of a record |
@@ -313,19 +392,30 @@ src/
     render.ts        Event → push copy
     dispatcher.ts    Rules, dedupe, retry, delivery log
     channels/        ntfy · Pushover · Web Push · console
-  server/app.ts      HTTP API, webhook receiver
+  server/app.ts      HTTP API, webhook receiver, /link
   scheduler.ts       Polling with backoff
-test/                81 tests
+public/link.html     Plaid Link connection page
+test/                84 tests
 ```
 
 ## Status
 
 Both features are functionally complete and tested end to end against the
-simulated provider. Not yet built:
+simulated provider (84 tests). You can connect a bank and start collecting a
+ledger today.
 
-- **A user interface.** The API and CLI are the surface today; the timeline is
-  designed to be renderable but nothing renders it yet.
-- **Verification against a real institution.** The Plaid adapter is written to
-  the documented API but has not been run against live credentials, so the
-  fuzzy matcher's thresholds in particular deserve tuning once there is real
-  data to check them against.
+Not yet built:
+
+- **A timeline UI.** `/link` is the only page; everything else is the API and
+  CLI. The timeline is designed to be rendered but nothing renders it yet.
+- **A deployment kit.** No Dockerfile, systemd unit, or backup script — see
+  the setup notes above for what a server needs.
+
+Known unknowns:
+
+- **The Plaid adapter has never run against live credentials.** It is written
+  to the documented API and the Sandbox path above exercises it, but the
+  fuzzy matcher's scoring thresholds in particular are tuned against
+  simulated data and deserve revisiting once real institutions have exercised
+  them. Every fuzzy match records its confidence and reasons in the event's
+  metadata, so they can be audited after the fact.

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connect a bank · finance-tracker</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #fbfaf9; --fg: #1a1a19; --muted: #6b6b68;
+    --card: #ffffff; --border: #e4e2df;
+    --accent: #2f6f4f; --accent-fg: #ffffff;
+    --err-bg: #fdf0ee; --err-fg: #8f2c1c; --err-border: #f0cec6;
+    --ok-bg: #eef6f1; --ok-fg: #245c40;
+    --code-bg: #f2f0ed;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #191918; --fg: #eceae7; --muted: #9a9895;
+      --card: #232322; --border: #35342f;
+      --accent: #6db38a; --accent-fg: #10281c;
+      --err-bg: #33201c; --err-fg: #f0a595; --err-border: #5c332a;
+      --ok-bg: #1d2f26; --ok-fg: #8fd0aa;
+      --code-bg: #2b2b29;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 40px 16px; background: var(--bg); color: var(--fg);
+    font: 15px/1.55 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  }
+  main { max-width: 620px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 0 0 28px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px; margin-bottom: 18px;
+  }
+  label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px; }
+  .hint { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+  input[type=text], input[type=password] {
+    width: 100%; padding: 9px 11px; border: 1px solid var(--border);
+    border-radius: 8px; background: var(--bg); color: var(--fg);
+    font: inherit; font-size: 14px;
+  }
+  button {
+    background: var(--accent); color: var(--accent-fg); border: 0;
+    border-radius: 8px; padding: 11px 20px; font: inherit; font-weight: 600;
+    cursor: pointer; margin-top: 16px;
+  }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  #log { margin-top: 20px; display: none; }
+  #log.on { display: block; }
+  .line { padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .line:last-child { border-bottom: 0; }
+  .line.err { color: var(--err-fg); }
+  .line.ok { color: var(--ok-fg); font-weight: 600; }
+  .banner { border-radius: 8px; padding: 12px 14px; margin-bottom: 18px; font-size: 14px; }
+  .banner.err { background: var(--err-bg); color: var(--err-fg); border: 1px solid var(--err-border); }
+  .banner.ok { background: var(--ok-bg); color: var(--ok-fg); }
+  ul { margin: 10px 0 0; padding-left: 20px; }
+  li { margin: 3px 0; }
+  .env { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 20px;
+         background: var(--code-bg); color: var(--muted); margin-left: 8px; vertical-align: 2px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Connect a bank<span id="env" class="env" hidden></span></h1>
+  <p class="sub" id="mode-sub">Links an account so finance-tracker can watch it for changes.</p>
+
+  <div id="sandbox-note" class="banner" hidden style="background:var(--code-bg);color:var(--muted)">
+    <strong>Sandbox.</strong> Pick any institution, then sign in with
+    <code>user_good</code> / <code>pass_good</code>. No real bank, no real data.
+  </div>
+
+  <div class="card">
+    <label for="token">API token</label>
+    <input id="token" type="password" placeholder="Value of API_TOKEN from your .env" autocomplete="off">
+    <p class="hint">
+      Leave blank if you are on <code>localhost</code> and have not set <code>API_TOKEN</code>.
+      Stored in this tab only, never sent anywhere but your own server.
+    </p>
+    <button id="start">Open Plaid Link</button>
+  </div>
+
+  <div id="log" class="card"></div>
+</main>
+
+<script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  // ?itemId= opens Link in update mode, which is how a connection that has
+  // fallen into needs_reauth gets repaired without re-adding the account.
+  var updateItemId = params.get('itemId');
+
+  var tokenInput = document.getElementById('token');
+  var startBtn = document.getElementById('start');
+  var logEl = document.getElementById('log');
+
+  var STORAGE_KEY = 'ft_api_token';
+  try { tokenInput.value = sessionStorage.getItem(STORAGE_KEY) || ''; } catch (e) {}
+
+  if (updateItemId) {
+    document.getElementById('mode-sub').textContent =
+      'Re-authenticating an existing connection (' + updateItemId + ').';
+  }
+
+  function log(msg, cls) {
+    logEl.classList.add('on');
+    var d = document.createElement('div');
+    d.className = 'line' + (cls ? ' ' + cls : '');
+    d.textContent = msg;
+    logEl.appendChild(d);
+    return d;
+  }
+
+  function headers() {
+    var h = { 'Content-Type': 'application/json' };
+    var t = tokenInput.value.trim();
+    if (t) h['Authorization'] = 'Bearer ' + t;
+    return h;
+  }
+
+  async function call(path, body) {
+    var res = await fetch(path, {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify(body || {}),
+    });
+    var payload = await res.json().catch(function () { return {}; });
+    if (!res.ok) {
+      throw new Error(payload.error || ('HTTP ' + res.status));
+    }
+    return payload;
+  }
+
+  // Show which Plaid environment the server is pointed at, so it is obvious
+  // whether a real bank login is about to happen.
+  fetch('/health').then(function (r) { return r.json(); }).then(function (h) {
+    if (h && h.provider) {
+      var badge = document.getElementById('env');
+      badge.textContent = h.plaidEnv ? 'plaid · ' + h.plaidEnv : h.provider;
+      badge.hidden = false;
+      if (h.plaidEnv === 'sandbox') document.getElementById('sandbox-note').hidden = false;
+    }
+  }).catch(function () {});
+
+  startBtn.addEventListener('click', async function () {
+    startBtn.disabled = true;
+    logEl.innerHTML = '';
+    try { sessionStorage.setItem(STORAGE_KEY, tokenInput.value.trim()); } catch (e) {}
+
+    try {
+      log('Requesting a Link token…');
+      var path = '/api/link/token' + (updateItemId ? '?itemId=' + encodeURIComponent(updateItemId) : '');
+      var res = await call(path, { userId: 'primary-user' });
+      log('Link token received. Opening Plaid…');
+
+      var handler = Plaid.create({
+        token: res.linkToken,
+        onSuccess: async function (publicToken) {
+          try {
+            if (updateItemId) {
+              // Update mode returns no new token to exchange; the existing
+              // access token is repaired in place.
+              log('Re-authentication complete.', 'ok');
+              log('Run a sync to confirm the connection is healthy.');
+              startBtn.disabled = false;
+              return;
+            }
+            log('Bank authorized. Exchanging token and running first sync…');
+            var out = await call('/api/link/exchange', { publicToken: publicToken });
+            log('Connected: ' + (out.institution || out.itemId), 'ok');
+            log('First sync recorded ' + out.initialEvents + ' ledger events.');
+            log('Next: view them with  npm run cli -- timeline');
+          } catch (err) {
+            log('Exchange failed: ' + err.message, 'err');
+          } finally {
+            startBtn.disabled = false;
+          }
+        },
+        onExit: function (err) {
+          if (err) log('Link closed: ' + (err.display_message || err.error_message || err.error_code), 'err');
+          else log('Link closed without connecting.');
+          startBtn.disabled = false;
+        },
+        onEvent: function (name) {
+          if (name === 'HANDOFF' || name === 'OPEN') log('Plaid: ' + name.toLowerCase());
+        },
+      });
+
+      handler.open();
+    } catch (err) {
+      var msg = err.message || String(err);
+      log('Failed: ' + msg, 'err');
+      if (/unauthor|API_TOKEN/i.test(msg)) {
+        log('Set the API token field above to the API_TOKEN value from your .env.');
+      }
+      if (/Plaid-specific/i.test(msg)) {
+        log('The server is running with PROVIDER=mock. Set PROVIDER=plaid in .env and restart.');
+      }
+      startBtn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
