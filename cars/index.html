@@ -31,25 +31,34 @@ ul.feat{columns:2;margin:0;padding-left:18px;font-size:13px}
 table.kv td{white-space:normal;vertical-align:top;font-size:12px}table.kv td:first-child{color:var(--mut);width:35%}
 pre{background:var(--bg);padding:8px;border-radius:6px;overflow:auto;max-height:420px;font-size:11px;white-space:pre-wrap;word-break:break-word;margin:0}
 .spark{width:100%;height:60px}
+details.ms{position:relative}details.ms>summary{list-style:none;padding:6px 24px 6px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;position:relative}
+details.ms>summary::-webkit-details-marker{display:none}details.ms>summary::after{content:'▾';position:absolute;right:8px;color:var(--mut)}
+details.ms.on>summary{border-color:var(--acc);color:var(--acc)}details.ms.off>summary{color:var(--mut);cursor:default}
+.ms .pop{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 4px);background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.15);padding:6px}
+.ms .pop input[type=search]{margin-bottom:4px}.ms .opts{max-height:260px;overflow:auto}
+.ms .opts label{display:flex;gap:6px;align-items:center;margin:0;padding:3px 4px;font-size:13px;color:var(--fg);border-radius:4px;cursor:pointer}.ms .opts label:hover{background:var(--row)}
+.ms .opts label input{width:auto}.ms .opts .n{margin-left:auto;color:var(--mut);font-size:11px}.ms .clear{font-size:12px;color:var(--acc);cursor:pointer;padding:2px 4px}
 @media (max-width:760px){.wrap{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--line)}ul.feat{columns:1}}
 </style></head><body>
 <header><h1>Car Database</h1><span class="mut" id="stats"></span><span style="flex:1"></span><a href="https://rossbower.com" style="color:var(--acc);text-decoration:none">rossbower.com &rarr;</a></header>
 <div class="wrap">
 <aside>
   <label>Search (make, model, trim, VIN, stock #, store, color)</label><input id="text" placeholder="e.g. GTI Autobahn">
-  <label>Source</label><select id="source"><option value="">Any</option></select>
-  <label>Make</label><select id="make"><option value="">Any</option></select>
-  <label>Model</label><select id="model"><option value="">Any</option></select>
+  <label>Source</label><details class="ms" id="source"></details>
+  <label>Make</label><details class="ms" id="make"></details>
+  <label>Model</label><details class="ms" id="model"></details>
+  <label>Trim</label><details class="ms" id="trim"></details>
   <label>Year</label><div class="pair"><input id="year_min" placeholder="min" inputmode="numeric"><input id="year_max" placeholder="max" inputmode="numeric"></div>
   <label>Price ($)</label><div class="pair"><input id="price_min" placeholder="min" inputmode="numeric"><input id="price_max" placeholder="max" inputmode="numeric"></div>
   <label>Mileage</label><div class="pair"><input id="miles_min" placeholder="min" inputmode="numeric"><input id="miles_max" placeholder="max" inputmode="numeric"></div>
   <label>Distance from ZIP Code (straight line)</label><input id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 98110"><div class="mut" id="zipmsg" style="font-size:12px;margin-top:3px"></div>
   <label>Distance (mi)</label><div class="pair"><input id="dist_min" placeholder="min" inputmode="numeric"><input id="dist_max" placeholder="max" inputmode="numeric"></div>
   <label>Highway MPG</label><div class="pair"><input id="mpg_hwy_min" placeholder="min" inputmode="numeric"><input id="mpg_hwy_max" placeholder="max" inputmode="numeric"></div>
-  <label>Drivetrain</label><select id="drive"><option value="">Any</option></select>
-  <label>Transmission</label><select id="trans"><option value="">Any</option></select>
-  <label>Body</label><select id="body"><option value="">Any</option></select>
-  <label>State</label><select id="state"><option value="">Any</option></select>
+  <label>Drivetrain</label><details class="ms" id="drive"></details>
+  <label>Transmission</label><details class="ms" id="trans"></details>
+  <label>Body</label><details class="ms" id="body"></details>
+  <label>Exterior color</label><details class="ms" id="color"></details>
+  <label>State</label><details class="ms" id="state"></details>
   <label>Has feature (text match)</label><input id="feature" placeholder="e.g. Heated Seats, BOSE">
   <label class="chk"><input type="checkbox" id="available"> Available only (not sold or reserved)</label>
   <label class="chk"><input type="checkbox" id="dropped"> Price dropped</label>
@@ -90,11 +99,13 @@ async function carDetail(sn){const n=String(crc32(sn)%DB.shards).padStart(2,'0')
   return {...d,dist:DB.cars.find(c=>c.stockNumber===sn)?.dist}}
 const count=(cars,k)=>{const m=new Map();cars.forEach(c=>{if(c[k]!=null)m.set(c[k],(m.get(c[k])||0)+1)});return [...m].map(([v,n])=>({v,n}))};
 const byV=a=>a.sort((x,y)=>String(x.v).localeCompare(String(y.v))), byN=a=>a.sort((x,y)=>y.n-x.n);
-async function getFacets(make){const {cars,stats}=await db();const out={makes:byV(count(cars,'make')),models:make?byV(count(cars.filter(c=>c.make===make),'model')):[]};
-  ['source','drive','trans','state','body'].forEach(k=>out[k]=byN(count(cars,k)));out.stats=stats;return out}
+async function getFacets(){const {cars,stats}=await db();const mk=MS.make.sel,md=MS.model.sel;
+  const inMake=mk.size?cars.filter(c=>mk.has(c.make)):cars,inModel=md.size?inMake.filter(c=>md.has(c.model)):null;
+  const out={make:byV(count(cars,'make')),model:byV(count(inMake,'model')),trim:inModel?byV(count(inModel,'trim')):null,stats};
+  ['source','drive','trans','state','body','color'].forEach(k=>out[k]=byN(count(cars,k)));return out}
 const SORTK={price:'basePrice',miles:'mileage',store:'storeName'};
 async function query(p){const {cars}=await db();const g=k=>(p.get(k)||'').trim();let r=cars;
-  for(const k of ['make','model','drive','trans','state','body','source'])if(g(k))r=r.filter(c=>String(c[k])===g(k));
+  for(const k of MSK){const want=new Set(p.getAll(k));if(want.size)r=r.filter(c=>want.has(String(c[k])))}
   for(const [k,f] of [['year','year'],['price','basePrice'],['miles','mileage'],['mpg_hwy','mpg_hwy'],['dist','dist']]){
     if(g(k+'_min')){const v=+g(k+'_min');r=r.filter(c=>c[f]!=null&&c[f]>=v)}
     if(g(k+'_max')){const v=+g(k+'_max');r=r.filter(c=>c[f]!=null&&c[f]<=v)}}
@@ -107,16 +118,35 @@ async function query(p){const {cars}=await db();const g=k=>(p.get(k)||'').trim()
   const k=SORTK[sort]||sort,m=dir==='desc'?-1:1;
   r=[...r].sort((a,b)=>{const x=a[k],y=b[k];if(x==null||y==null)return (x==null)-(y==null);return (x<y?-1:x>y?1:0)*m});
   return {total:r.length,rows:r.slice(offset,offset+LIMIT)}}
-const F=['text','source','make','model','year_min','year_max','price_min','price_max','miles_min','miles_max','dist_min','dist_max','mpg_hwy_min','mpg_hwy_max','drive','trans','body','state','feature'];
+const F=['text','year_min','year_max','price_min','price_max','miles_min','miles_max','dist_min','dist_max','mpg_hwy_min','mpg_hwy_max','feature'];
+// Multi-select filters: any checked value matches (OR within a filter, AND across filters).
+const MSK=['source','make','model','trim','drive','trans','body','state','color'],MS={};
+function msInit(k,onChange){const el=$(k),m=MS[k]={el,sel:new Set(),items:[]};
+  el.innerHTML='<summary></summary><div class="pop"><input type="search" placeholder="Filter list"><div class="opts"></div></div>';
+  const box=el.querySelector('.opts'),find=el.querySelector('input');
+  el.addEventListener('toggle',()=>{if(el.open){if(el.classList.contains('off')){el.open=false;return}
+    Object.values(MS).forEach(o=>{if(o!==m)o.el.open=false});find.value='';msDraw(k);if(m.items.length>12)find.focus()}});
+  find.oninput=()=>msDraw(k);
+  box.onchange=e=>{const v=e.target.value;e.target.checked?m.sel.add(v):m.sel.delete(v);msLabel(k);onChange()};
+  box.onclick=e=>{if(e.target.classList.contains('clear')){m.sel.clear();msDraw(k);msLabel(k);onChange()}};msLabel(k)}
+function msSet(k,items,hint){const m=MS[k];m.items=items||[];m.hint=items?'':hint;
+  const have=new Set(m.items.map(i=>String(i.v)));[...m.sel].forEach(v=>{if(!have.has(v))m.sel.delete(v)});msDraw(k);msLabel(k)}
+function msDraw(k){const m=MS[k],t=m.el.querySelector('input').value.toLowerCase();
+  const on=i=>m.sel.has(String(i.v)),it=m.items.filter(i=>!t||String(i.v).toLowerCase().includes(t));
+  it.sort((a,b)=>on(b)-on(a));it.length=Math.min(it.length,500);
+  m.el.querySelector('.opts').innerHTML=(m.sel.size?`<div class="clear">Clear ${m.sel.size} selected</div>`:'')+
+    it.map(i=>`<label><input type="checkbox" value="${esc(i.v)}"${m.sel.has(String(i.v))?' checked':''}>${esc(i.v)}<span class="n">${num(i.n)}</span></label>`).join('')}
+function msLabel(k){const m=MS[k],v=[...m.sel];m.el.classList.toggle('on',v.length>0);m.el.classList.toggle('off',!!m.hint);
+  m.el.querySelector('summary').textContent=m.hint||(!v.length?'Any':v.length<=2?v.join(', '):`${v.length} selected`)}
+document.addEventListener('click',e=>{Object.values(MS).forEach(m=>{if(m.el.open&&!m.el.contains(e.target))m.el.open=false})});
 const B=['available','dropped','full','detail'];
 const SRC_LABEL={carmax:'CarMax',cargurus:'CarGurus',autotrader:'AutoTrader'};
 function sourceUrl(d){if(d.source==='cargurus')return `https://www.cargurus.com/Cars/details/${d.stockNumber.slice(2)}`;
   if(d.source==='autotrader')return `https://www.autotrader.com/cars-for-sale/vehicle/${d.stockNumber.slice(2)}`;
   return `https://www.carmax.com/car/${d.stockNumber}`}
-function params(){const p=new URLSearchParams();F.forEach(k=>{if($(k).value)p.set(k,$(k).value)});B.forEach(k=>{if($(k).checked)p.set(k,1)});if(HOME)p.set('zip',HOME.zip);p.set('sort',sort);p.set('dir',dir);p.set('offset',offset);p.set('limit',LIMIT);return p}
-function fill(sel,items,keep){const cur=keep?sel.value:'';sel.innerHTML='<option value="">Any</option>'+items.map(i=>`<option value="${esc(i.v)}">${esc(i.v)} (${i.n})</option>`).join('');sel.value=cur}
-async function facets(){const f=await getFacets($('make').value);
-  if(!$('make').options.length||$('make').options.length<2)fill($('make'),f.makes);fill($('model'),f.models,true);['drive','trans','state','body','source'].forEach(k=>{if($(k).options.length<2)fill($(k),f[k])});
+function params(){const p=new URLSearchParams();F.forEach(k=>{if($(k).value)p.set(k,$(k).value)});MSK.forEach(k=>MS[k].sel.forEach(v=>p.append(k,v)));B.forEach(k=>{if($(k).checked)p.set(k,1)});if(HOME)p.set('zip',HOME.zip);p.set('sort',sort);p.set('dir',dir);p.set('offset',offset);p.set('limit',LIMIT);return p}
+async function facets(){const f=await getFacets();
+  MSK.forEach(k=>msSet(k,f[k],k==='trim'?'Choose a model first':''));
   const s=f.stats;$('stats').textContent=`Snapshot · ${num(s.cars)} cars · ${num(s.full_n)} full records · ${num(s.detail)} with detail pages · data from ${String(s.since).slice(0,10)} to ${String(s.latest).slice(0,10)}`}
 function header(){$('hdr').innerHTML=COLS.filter(c=>c[0]!=='thumb'||$('thumbs').checked).map(([k,l])=>`<th data-k="${k}" class="${k===sort?'sorted':''}">${l}${k===sort?(dir==='asc'?' ▲':' ▼'):''}</th>`).join('');
   $('hdr').querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(k==='thumb')return;dir=(sort===k&&dir==='asc')?'desc':'asc';sort=k;offset=0;load()})}
@@ -167,11 +197,13 @@ ${x.history?`<section><h3>History report notes (manual)</h3>${kv(x.history)}</se
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('panel').classList.remove('open')});
 $('go').onclick=async()=>{await changeZip($('zip').value);offset=0;load()};
 $('zip').addEventListener('keydown',e=>{if(e.key==='Enter')$('go').onclick()});$('zip').onchange=()=>$('go').onclick();F.forEach(k=>$(k).addEventListener('keydown',e=>{if(e.key==='Enter'){offset=0;load()}}));
-['drive','trans','body','state','model','source'].forEach(k=>$(k).onchange=()=>{offset=0;load()});B.concat(['thumbs']).forEach(k=>$(k).onchange=()=>{offset=0;load()});
-$('make').onchange=async()=>{$('model').value='';await facets();offset=0;load()};
-$('reset').onclick=()=>{F.forEach(k=>$(k).value='');B.forEach(k=>$(k).checked=false);sort='price';dir='asc';offset=0;facets().then(load)};
+MSK.forEach(k=>msInit(k,async()=>{if(k==='make'||k==='model')await facets();offset=0;load()}));B.concat(['thumbs']).forEach(k=>$(k).onchange=()=>{offset=0;load()});
+$('reset').onclick=()=>{F.forEach(k=>$(k).value='');MSK.forEach(k=>MS[k].sel.clear());B.forEach(k=>$(k).checked=false);sort='price';dir='asc';offset=0;facets().then(load)};
 $('prev').onclick=()=>{offset=Math.max(0,offset-LIMIT);load()};$('next').onclick=()=>{offset+=LIMIT;load()};
 (async()=>{const q=new URLSearchParams(location.search);await facets();
-  let z=q.get('zip');try{z??=localStorage.getItem('cars.zip')}catch{}if(z)await changeZip(z);if(q.get('make')){$('make').value=q.get('make');await facets()}
+  let z=q.get('zip');try{z??=localStorage.getItem('cars.zip')}catch{}if(z)await changeZip(z);
+  // Makes narrow the model list and models narrow trims, so restore them in that order.
+  for(const k of ['make','model']){if(q.has(k)){q.getAll(k).forEach(v=>MS[k].sel.add(v));await facets()}}
+  MSK.filter(k=>k!=='make'&&k!=='model').forEach(k=>{q.getAll(k).forEach(v=>MS[k].sel.add(v));msLabel(k)});
   F.forEach(k=>{if(q.get(k))$(k).value=q.get(k)});B.forEach(k=>$(k).checked=q.get(k)==='1');sort=q.get('sort')||sort;dir=q.get('dir')||dir;offset=+(q.get('offset')||0);load()})();
 </script></body></html>
