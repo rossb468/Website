@@ -43,7 +43,8 @@ pre{background:var(--bg);padding:8px;border-radius:6px;overflow:auto;max-height:
   <label>Year</label><div class="pair"><input id="year_min" placeholder="min" inputmode="numeric"><input id="year_max" placeholder="max" inputmode="numeric"></div>
   <label>Price ($)</label><div class="pair"><input id="price_min" placeholder="min" inputmode="numeric"><input id="price_max" placeholder="max" inputmode="numeric"></div>
   <label>Mileage</label><div class="pair"><input id="miles_min" placeholder="min" inputmode="numeric"><input id="miles_max" placeholder="max" inputmode="numeric"></div>
-  <label>Distance from 19362 (mi)</label><div class="pair"><input id="dist_min" placeholder="min" inputmode="numeric"><input id="dist_max" placeholder="max" inputmode="numeric"></div>
+  <label>Distance from ZIP Code (straight line)</label><input id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 98110"><div class="mut" id="zipmsg" style="font-size:12px;margin-top:3px"></div>
+  <label>Distance (mi)</label><div class="pair"><input id="dist_min" placeholder="min" inputmode="numeric"><input id="dist_max" placeholder="max" inputmode="numeric"></div>
   <label>Highway MPG</label><div class="pair"><input id="mpg_hwy_min" placeholder="min" inputmode="numeric"><input id="mpg_hwy_max" placeholder="max" inputmode="numeric"></div>
   <label>Drivetrain</label><select id="drive"><option value="">Any</option></select>
   <label>Transmission</label><select id="trans"><option value="">Any</option></select>
@@ -71,10 +72,22 @@ const SHARDS={};
 async function db(){if(DB)return DB;const j=await (await fetch('data/cars.json')).json();
   DB={...j,cars:j.rows.map(r=>Object.fromEntries(j.fields.map((f,i)=>[f,r[i]])))};
   DB.cars.forEach(c=>{c.featText=c.feats.map(i=>j.features[i]).join('\n').toLowerCase();
-    c.text=[c.make,c.model,c.trim,c.vin,c.stockNumber,c.storeName,c.color].join(' ').toLowerCase()});return DB}
+    c.text=[c.make,c.model,c.trim,c.vin,c.stockNumber,c.storeName,c.color].join(' ').toLowerCase()});
+  setHome(DB.home);return DB}
+// Reference point for distances; stores carry lat/long, ZIPs come from the Census centroid shards in data/zips/.
+let HOME=null;const ZIPS={};
+function miles(a,b){const r=Math.PI/180,x=Math.sin((b[0]-a[0])*r/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin((b[1]-a[1])*r/2)**2;return Math.round(7917.5*Math.asin(Math.sqrt(x)))}
+function setHome(h){HOME=h;$('zip').value=h.zip;$('zipmsg').textContent='';
+  DB.cars.forEach(c=>{const st=DB.stores[c.storeId];c.dist=st?miles([h.lat,h.lon],st):null})}
+async function lookupZip(z){ZIPS[z[0]]??=fetch(`data/zips/${z[0]}.json`).then(r=>r.json());const p=(await ZIPS[z[0]])[z];return p&&{zip:z,lat:p[0],lon:p[1]}}
+async function changeZip(z){z=String(z||'').trim();if(z===HOME.zip)return true;
+  const h=/^\d{5}$/.test(z)&&await lookupZip(z).catch(()=>null);
+  if(!h){$('zipmsg').textContent=`Couldn't find ZIP Code ${z||'(blank)'}; still using ${HOME.zip}.`;return false}
+  setHome(h);try{localStorage.setItem('cars.zip',z)}catch{}return true}
 function crc32(s){let c,crc=~0;for(let i=0;i<s.length;i++){c=(crc^s.charCodeAt(i))&255;for(let k=0;k<8;k++)c=c&1?(c>>>1)^0xEDB88320:c>>>1;crc=(crc>>>8)^c}return (~crc)>>>0}
 async function carDetail(sn){const n=String(crc32(sn)%DB.shards).padStart(2,'0');
-  SHARDS[n]??=fetch(`data/detail/${n}.json`).then(r=>r.json());return (await SHARDS[n])[sn]}
+  SHARDS[n]??=fetch(`data/detail/${n}.json`).then(r=>r.json());const d=(await SHARDS[n])[sn];
+  return {...d,dist:DB.cars.find(c=>c.stockNumber===sn)?.dist}}
 const count=(cars,k)=>{const m=new Map();cars.forEach(c=>{if(c[k]!=null)m.set(c[k],(m.get(c[k])||0)+1)});return [...m].map(([v,n])=>({v,n}))};
 const byV=a=>a.sort((x,y)=>String(x.v).localeCompare(String(y.v))), byN=a=>a.sort((x,y)=>y.n-x.n);
 async function getFacets(make){const {cars,stats}=await db();const out={makes:byV(count(cars,'make')),models:make?byV(count(cars.filter(c=>c.make===make),'model')):[]};
@@ -100,7 +113,7 @@ const SRC_LABEL={carmax:'CarMax',cargurus:'CarGurus',autotrader:'AutoTrader'};
 function sourceUrl(d){if(d.source==='cargurus')return `https://www.cargurus.com/Cars/details/${d.stockNumber.slice(2)}`;
   if(d.source==='autotrader')return `https://www.autotrader.com/cars-for-sale/vehicle/${d.stockNumber.slice(2)}`;
   return `https://www.carmax.com/car/${d.stockNumber}`}
-function params(){const p=new URLSearchParams();F.forEach(k=>{if($(k).value)p.set(k,$(k).value)});B.forEach(k=>{if($(k).checked)p.set(k,1)});p.set('sort',sort);p.set('dir',dir);p.set('offset',offset);p.set('limit',LIMIT);return p}
+function params(){const p=new URLSearchParams();F.forEach(k=>{if($(k).value)p.set(k,$(k).value)});B.forEach(k=>{if($(k).checked)p.set(k,1)});if(HOME)p.set('zip',HOME.zip);p.set('sort',sort);p.set('dir',dir);p.set('offset',offset);p.set('limit',LIMIT);return p}
 function fill(sel,items,keep){const cur=keep?sel.value:'';sel.innerHTML='<option value="">Any</option>'+items.map(i=>`<option value="${esc(i.v)}">${esc(i.v)} (${i.n})</option>`).join('');sel.value=cur}
 async function facets(){const f=await getFacets($('make').value);
   if(!$('make').options.length||$('make').options.length<2)fill($('make'),f.makes);fill($('model'),f.models,true);['drive','trans','state','body','source'].forEach(k=>{if($(k).options.length<2)fill($(k),f[k])});
@@ -131,7 +144,7 @@ async function open(sn){const d=await carDetail(sn);const x=d.data,det=x.detail&
     <div class="mut">Stock #${esc(d.stockNumber)} · VIN ${esc(d.vin||'?')} · <a style="color:var(--acc)" href="${esc(sourceUrl(d))}" target="_blank">open on ${esc(SRC_LABEL[d.source]||d.source||'site')} ↗</a></div></div><button id="close">✕</button></div>
   <div class="grid">${f('Price',money(d.basePrice))}${f('Original price',x.originalPrice?money(x.originalPrice):'')}${f('Miles',num(d.mileage))}${f('MPG',x.mpgCity?x.mpgCity+' city / '+x.mpgHighway+' hwy':'')}
     ${f('Engine',P.engine||[x.engineSize,x.cylinders?x.cylinders+'-cyl':''].filter(Boolean).join(' '))}${f('Horsepower',x.horsepower)}${f('Drive',x.driveTrain||P.driveTrainType)}${f('Transmission',x.transmission)}
-    ${f('Exterior',x.exteriorColor||P.exteriorColor)}${f('Interior',x.interiorColor||P.interiorColor)}${f('Store',[d.storeName,d.state].filter(Boolean).join(', '))}${f('Miles from 19362',d.dist)}
+    ${f('Exterior',x.exteriorColor||P.exteriorColor)}${f('Interior',x.interiorColor||P.interiorColor)}${f('Store',[d.storeName,d.state].filter(Boolean).join(', '))}${f('Miles from '+HOME.zip,d.dist)}
     ${f('Transfer fee',x.transferFee!=null?money(x.transferFee):'')}${f('Favorites',x.numberOfFavorites)}${f('CarMax status',det?det.status:'')}${f('Lot spot',P.location&&P.location.lotLocation)}
     ${f('First seen',String(d.first_seen).slice(0,10))}${f('Last seen',String(d.last_seen).slice(0,10))}</div>
   <section><h3>Price history (${d.prices.length} observations)</h3>${spark(d.prices)}<div class="mut" style="font-size:12px">${d.prices.map(p=>`${String(p.seen_at).slice(0,10)}: ${money(p.price)}`).join(' · ')}</div></section>
@@ -152,11 +165,13 @@ ${x.history?`<section><h3>History report notes (manual)</h3>${kv(x.history)}</se
   <section><details><summary style="cursor:pointer">Every field (${Object.keys(x).length})</summary>${kv(x)}</details></section>`;
   $('panel').classList.add('open');$('close').onclick=()=>$('panel').classList.remove('open')}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('panel').classList.remove('open')});
-$('go').onclick=()=>{offset=0;load()};F.forEach(k=>$(k).addEventListener('keydown',e=>{if(e.key==='Enter'){offset=0;load()}}));
+$('go').onclick=async()=>{await changeZip($('zip').value);offset=0;load()};
+$('zip').addEventListener('keydown',e=>{if(e.key==='Enter')$('go').onclick()});$('zip').onchange=()=>$('go').onclick();F.forEach(k=>$(k).addEventListener('keydown',e=>{if(e.key==='Enter'){offset=0;load()}}));
 ['drive','trans','body','state','model','source'].forEach(k=>$(k).onchange=()=>{offset=0;load()});B.concat(['thumbs']).forEach(k=>$(k).onchange=()=>{offset=0;load()});
 $('make').onchange=async()=>{$('model').value='';await facets();offset=0;load()};
 $('reset').onclick=()=>{F.forEach(k=>$(k).value='');B.forEach(k=>$(k).checked=false);sort='price';dir='asc';offset=0;facets().then(load)};
 $('prev').onclick=()=>{offset=Math.max(0,offset-LIMIT);load()};$('next').onclick=()=>{offset+=LIMIT;load()};
-(async()=>{const q=new URLSearchParams(location.search);await facets();if(q.get('make')){$('make').value=q.get('make');await facets()}
+(async()=>{const q=new URLSearchParams(location.search);await facets();
+  let z=q.get('zip');try{z??=localStorage.getItem('cars.zip')}catch{}if(z)await changeZip(z);if(q.get('make')){$('make').value=q.get('make');await facets()}
   F.forEach(k=>{if(q.get(k))$(k).value=q.get(k)});B.forEach(k=>$(k).checked=q.get(k)==='1');sort=q.get('sort')||sort;dir=q.get('dir')||dir;offset=+(q.get('offset')||0);load()})();
 </script></body></html>
