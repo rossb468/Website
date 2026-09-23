@@ -1,0 +1,162 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Car Database — Ross Bower</title>
+<style>
+:root{--bg:#fafafa;--panel:#fff;--fg:#1b1b1b;--mut:#6b6b6b;--line:#e4e4e4;--acc:#1f5fbf;--acc-bg:#e8f0fc;--good:#107a36;--warn:#a85800;--row:#f4f7fb}
+@media (prefers-color-scheme:dark){:root{--bg:#121212;--panel:#1b1b1b;--fg:#e9e9e9;--mut:#9a9a9a;--line:#2e2e2e;--acc:#7fb0ff;--acc-bg:#1c2a40;--good:#57cf7e;--warn:#f2a64a;--row:#1f242c}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 -apple-system,system-ui,sans-serif}
+header{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:17px;margin:0}header .mut{font-size:13px}.mut{color:var(--mut)}
+.wrap{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 50px)}
+aside{padding:12px 14px;border-right:1px solid var(--line);background:var(--panel);overflow:auto}
+aside label{display:block;font-size:12px;color:var(--mut);margin:10px 0 3px}
+aside input,aside select{width:100%;padding:6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit}
+.pair{display:flex;gap:6px}.pair input{width:50%}.chk{display:flex;align-items:center;gap:6px;font-size:13px;margin:6px 0;color:var(--fg)}.chk input{width:auto}
+button{font:inherit;padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+button.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+main{padding:12px 16px;overflow:auto}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+table{border-collapse:collapse;width:100%;background:var(--panel);font-size:13px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{position:sticky;top:0;background:var(--panel);cursor:pointer;user-select:none;font-weight:600}th.sorted{color:var(--acc)}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--row)}td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tag{font-size:11px;padding:1px 6px;border-radius:9px;background:var(--acc-bg);color:var(--acc);margin-left:4px}
+.tag.warn{background:transparent;border:1px solid var(--warn);color:var(--warn)}.tag.good{background:transparent;border:1px solid var(--good);color:var(--good)}
+img.th{width:64px;height:40px;object-fit:cover;border-radius:4px;vertical-align:middle}
+#panel{position:fixed;top:0;right:0;width:min(640px,100vw);height:100vh;background:var(--panel);border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(0,0,0,.15);overflow:auto;padding:16px;transform:translateX(100%);transition:transform .15s}
+#panel.open{transform:none}#panel h2{margin:0 0 4px;font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:12px 0}
+.fact{background:var(--bg);border-radius:8px;padding:8px}.fact .k{font-size:11px;color:var(--mut)}.fact .v{font-weight:600}
+section{margin:14px 0}section h3{font-size:14px;margin:0 0 6px}
+ul.feat{columns:2;margin:0;padding-left:18px;font-size:13px}
+table.kv td{white-space:normal;vertical-align:top;font-size:12px}table.kv td:first-child{color:var(--mut);width:35%}
+pre{background:var(--bg);padding:8px;border-radius:6px;overflow:auto;max-height:420px;font-size:11px;white-space:pre-wrap;word-break:break-word;margin:0}
+.spark{width:100%;height:60px}
+@media (max-width:760px){.wrap{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--line)}ul.feat{columns:1}}
+</style></head><body>
+<header><h1>Car Database</h1><span class="mut" id="stats"></span><span style="flex:1"></span><a href="https://rossbower.com" style="color:var(--acc);text-decoration:none">rossbower.com &rarr;</a></header>
+<div class="wrap">
+<aside>
+  <label>Search (make, model, trim, VIN, stock #, store, color)</label><input id="text" placeholder="e.g. GTI Autobahn">
+  <label>Source</label><select id="source"><option value="">Any</option></select>
+  <label>Make</label><select id="make"><option value="">Any</option></select>
+  <label>Model</label><select id="model"><option value="">Any</option></select>
+  <label>Year</label><div class="pair"><input id="year_min" placeholder="min" inputmode="numeric"><input id="year_max" placeholder="max" inputmode="numeric"></div>
+  <label>Price ($)</label><div class="pair"><input id="price_min" placeholder="min" inputmode="numeric"><input id="price_max" placeholder="max" inputmode="numeric"></div>
+  <label>Mileage</label><div class="pair"><input id="miles_min" placeholder="min" inputmode="numeric"><input id="miles_max" placeholder="max" inputmode="numeric"></div>
+  <label>Distance from 19362 (mi)</label><div class="pair"><input id="dist_min" placeholder="min" inputmode="numeric"><input id="dist_max" placeholder="max" inputmode="numeric"></div>
+  <label>Highway MPG</label><div class="pair"><input id="mpg_hwy_min" placeholder="min" inputmode="numeric"><input id="mpg_hwy_max" placeholder="max" inputmode="numeric"></div>
+  <label>Drivetrain</label><select id="drive"><option value="">Any</option></select>
+  <label>Transmission</label><select id="trans"><option value="">Any</option></select>
+  <label>Body</label><select id="body"><option value="">Any</option></select>
+  <label>State</label><select id="state"><option value="">Any</option></select>
+  <label>Has feature (text match)</label><input id="feature" placeholder="e.g. Heated Seats, BOSE">
+  <label class="chk"><input type="checkbox" id="available"> Available only (not sold or reserved)</label>
+  <label class="chk"><input type="checkbox" id="dropped"> Price dropped</label>
+  <label class="chk"><input type="checkbox" id="full"> Full records only</label>
+  <label class="chk"><input type="checkbox" id="detail"> Detail page captured</label>
+  <label class="chk"><input type="checkbox" id="thumbs"> Show photos (loads images from CarMax)</label>
+  <div style="display:flex;gap:6px;margin-top:10px"><button class="primary" id="go">Apply</button><button id="reset">Reset</button></div>
+</aside>
+<main>
+  <div class="bar"><b id="count"></b><span class="mut" id="range"></span><span style="flex:1"></span><button id="prev">‹ Prev</button><button id="next">Next ›</button></div>
+  <table><thead><tr id="hdr"></tr></thead><tbody id="rows"></tbody></table>
+</main></div>
+<div id="panel"></div>
+<script>
+const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const money=v=>v==null?'':'$'+Number(v).toLocaleString(), num=v=>v==null?'':Number(v).toLocaleString();
+const COLS=[['thumb',''],['source','Src'],['year','Year'],['make','Make'],['model','Model'],['trim','Trim'],['price','Price'],['miles','Miles'],['mpg_hwy','MPG'],['drive','Drive'],['trans','Trans'],['color','Color'],['store','Store'],['dist','Mi. away'],['last_seen','Last seen']];
+let sort='price',dir='asc',offset=0,LIMIT=100,DB=null;
+const SHARDS={};
+async function db(){if(DB)return DB;const j=await (await fetch('data/cars.json')).json();
+  DB={...j,cars:j.rows.map(r=>Object.fromEntries(j.fields.map((f,i)=>[f,r[i]])))};
+  DB.cars.forEach(c=>{c.featText=c.feats.map(i=>j.features[i]).join('\n').toLowerCase();
+    c.text=[c.make,c.model,c.trim,c.vin,c.stockNumber,c.storeName,c.color].join(' ').toLowerCase()});return DB}
+function crc32(s){let c,crc=~0;for(let i=0;i<s.length;i++){c=(crc^s.charCodeAt(i))&255;for(let k=0;k<8;k++)c=c&1?(c>>>1)^0xEDB88320:c>>>1;crc=(crc>>>8)^c}return (~crc)>>>0}
+async function carDetail(sn){const n=String(crc32(sn)%DB.shards).padStart(2,'0');
+  SHARDS[n]??=fetch(`data/detail/${n}.json`).then(r=>r.json());return (await SHARDS[n])[sn]}
+const count=(cars,k)=>{const m=new Map();cars.forEach(c=>{if(c[k]!=null)m.set(c[k],(m.get(c[k])||0)+1)});return [...m].map(([v,n])=>({v,n}))};
+const byV=a=>a.sort((x,y)=>String(x.v).localeCompare(String(y.v))), byN=a=>a.sort((x,y)=>y.n-x.n);
+async function getFacets(make){const {cars,stats}=await db();const out={makes:byV(count(cars,'make')),models:make?byV(count(cars.filter(c=>c.make===make),'model')):[]};
+  ['source','drive','trans','state','body'].forEach(k=>out[k]=byN(count(cars,k)));out.stats=stats;return out}
+const SORTK={price:'basePrice',miles:'mileage',store:'storeName'};
+async function query(p){const {cars}=await db();const g=k=>(p.get(k)||'').trim();let r=cars;
+  for(const k of ['make','model','drive','trans','state','body','source'])if(g(k))r=r.filter(c=>String(c[k])===g(k));
+  for(const [k,f] of [['year','year'],['price','basePrice'],['miles','mileage'],['mpg_hwy','mpg_hwy'],['dist','dist']]){
+    if(g(k+'_min')){const v=+g(k+'_min');r=r.filter(c=>c[f]!=null&&c[f]>=v)}
+    if(g(k+'_max')){const v=+g(k+'_max');r=r.filter(c=>c[f]!=null&&c[f]<=v)}}
+  for(const t of g('text').toLowerCase().split(/\s+/).filter(Boolean))r=r.filter(c=>c.text.includes(t));
+  if(g('feature')){const t=g('feature').toLowerCase();r=r.filter(c=>c.featText.includes(t))}
+  if(g('full')==='1')r=r.filter(c=>c.full_record===1);
+  if(g('detail')==='1')r=r.filter(c=>c.has_detail);
+  if(g('dropped')==='1')r=r.filter(c=>c.dropped||c.n_prices>1);
+  if(g('available')==='1')r=r.filter(c=>(c.saleable??1)&&!c.reserved);
+  const k=SORTK[sort]||sort,m=dir==='desc'?-1:1;
+  r=[...r].sort((a,b)=>{const x=a[k],y=b[k];if(x==null||y==null)return (x==null)-(y==null);return (x<y?-1:x>y?1:0)*m});
+  return {total:r.length,rows:r.slice(offset,offset+LIMIT)}}
+const F=['text','source','make','model','year_min','year_max','price_min','price_max','miles_min','miles_max','dist_min','dist_max','mpg_hwy_min','mpg_hwy_max','drive','trans','body','state','feature'];
+const B=['available','dropped','full','detail'];
+const SRC_LABEL={carmax:'CarMax',cargurus:'CarGurus',autotrader:'AutoTrader'};
+function sourceUrl(d){if(d.source==='cargurus')return `https://www.cargurus.com/Cars/details/${d.stockNumber.slice(2)}`;
+  if(d.source==='autotrader')return `https://www.autotrader.com/cars-for-sale/vehicle/${d.stockNumber.slice(2)}`;
+  return `https://www.carmax.com/car/${d.stockNumber}`}
+function params(){const p=new URLSearchParams();F.forEach(k=>{if($(k).value)p.set(k,$(k).value)});B.forEach(k=>{if($(k).checked)p.set(k,1)});p.set('sort',sort);p.set('dir',dir);p.set('offset',offset);p.set('limit',LIMIT);return p}
+function fill(sel,items,keep){const cur=keep?sel.value:'';sel.innerHTML='<option value="">Any</option>'+items.map(i=>`<option value="${esc(i.v)}">${esc(i.v)} (${i.n})</option>`).join('');sel.value=cur}
+async function facets(){const f=await getFacets($('make').value);
+  if(!$('make').options.length||$('make').options.length<2)fill($('make'),f.makes);fill($('model'),f.models,true);['drive','trans','state','body','source'].forEach(k=>{if($(k).options.length<2)fill($(k),f[k])});
+  const s=f.stats;$('stats').textContent=`Snapshot · ${num(s.cars)} cars · ${num(s.full_n)} full records · ${num(s.detail)} with detail pages · data from ${String(s.since).slice(0,10)} to ${String(s.latest).slice(0,10)}`}
+function header(){$('hdr').innerHTML=COLS.filter(c=>c[0]!=='thumb'||$('thumbs').checked).map(([k,l])=>`<th data-k="${k}" class="${k===sort?'sorted':''}">${l}${k===sort?(dir==='asc'?' ▲':' ▼'):''}</th>`).join('');
+  $('hdr').querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(k==='thumb')return;dir=(sort===k&&dir==='asc')?'desc':'asc';sort=k;offset=0;load()})}
+async function load(){header();history.replaceState(null,'','?'+params());const r=await query(params());
+  $('count').textContent=`${num(r.total)} cars`;$('range').textContent=r.total?`showing ${offset+1}–${Math.min(offset+LIMIT,r.total)}`:'';
+  $('prev').disabled=offset===0;$('next').disabled=offset+LIMIT>=r.total;
+  $('rows').innerHTML=r.rows.map(c=>{const drop=(c.orig&&c.orig>c.basePrice)||c.n_prices>1;
+    return `<tr data-sn="${esc(c.stockNumber)}">${$('thumbs').checked?`<td>${c.thumb?`<img class="th" loading="lazy" src="${esc(c.thumb)}">`:''}</td>`:''}
+    <td><span class="tag">${esc(SRC_LABEL[c.source]||c.source||'')}</span></td>
+    <td>${esc(c.year)}</td><td>${esc(c.make)}</td><td>${esc(c.model)}</td><td>${esc(c.trim||'')}${c.has_detail?'<span class="tag">detail</span>':''}${c.reserved?'<span class="tag warn">reserved</span>':''}</td>
+    <td class="num">${money(c.basePrice)}${drop?'<span class="tag good">↓</span>':''}</td><td class="num">${num(c.mileage)}</td>
+    <td class="num">${c.mpg_city?esc(c.mpg_city)+'/'+esc(c.mpg_hwy):''}</td><td>${esc((c.drive||'').replace(' Wheel Drive','WD').replace('All','A').replace('Front','F').replace('Rear','R').replace('Four','4'))}</td>
+    <td>${esc((c.trans||'').slice(0,4))}</td><td>${esc(c.color||'')}</td><td>${esc(c.storeName||'')}${c.state?', '+esc(c.state):''}</td>
+    <td class="num">${num(c.dist)}</td><td class="mut">${esc(String(c.last_seen||'').slice(0,10))}</td></tr>`}).join('');
+  $('rows').querySelectorAll('tr').forEach(tr=>tr.onclick=()=>open(tr.dataset.sn))}
+function kv(o){return '<table class="kv">'+Object.entries(o).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${v&&typeof v==='object'?`<pre>${esc(JSON.stringify(v,null,2))}</pre>`:esc(v)}</td></tr>`).join('')+'</table>'}
+function spark(prices){if(prices.length<2)return '';const ys=prices.map(p=>p.price),mn=Math.min(...ys),mx=Math.max(...ys),w=600,h=60;
+  const pts=prices.map((p,i)=>`${(i/(prices.length-1))*w},${mx===mn?h/2:h-6-((p.price-mn)/(mx-mn))*(h-12)}`).join(' ');
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2"/></svg>`}
+async function open(sn){const d=await carDetail(sn);const x=d.data,det=x.detail&&x.detail.car?x.detail.car:null,P=det?det.properties||{}:{};
+  const f=(k,v)=>v==null||v===''?'':`<div class="fact"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>`;
+  const feats=(P.featureInfo&&P.featureInfo.features)||x.features||[];const fl=feats.map(t=>typeof t==='string'?t:(t.name||t.displayName||JSON.stringify(t)));
+  const hist=P.history, recon=P.reconditioning, war=P.warranty&&P.warranty.warranties;
+  $('panel').innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px"><div><h2>${esc([d.year,d.make,d.model,d.trim].filter(Boolean).join(' '))}</h2>
+    <div class="mut">Stock #${esc(d.stockNumber)} · VIN ${esc(d.vin||'?')} · <a style="color:var(--acc)" href="${esc(sourceUrl(d))}" target="_blank">open on ${esc(SRC_LABEL[d.source]||d.source||'site')} ↗</a></div></div><button id="close">✕</button></div>
+  <div class="grid">${f('Price',money(d.basePrice))}${f('Original price',x.originalPrice?money(x.originalPrice):'')}${f('Miles',num(d.mileage))}${f('MPG',x.mpgCity?x.mpgCity+' city / '+x.mpgHighway+' hwy':'')}
+    ${f('Engine',P.engine||[x.engineSize,x.cylinders?x.cylinders+'-cyl':''].filter(Boolean).join(' '))}${f('Horsepower',x.horsepower)}${f('Drive',x.driveTrain||P.driveTrainType)}${f('Transmission',x.transmission)}
+    ${f('Exterior',x.exteriorColor||P.exteriorColor)}${f('Interior',x.interiorColor||P.interiorColor)}${f('Store',[d.storeName,d.state].filter(Boolean).join(', '))}${f('Miles from 19362',d.dist)}
+    ${f('Transfer fee',x.transferFee!=null?money(x.transferFee):'')}${f('Favorites',x.numberOfFavorites)}${f('CarMax status',det?det.status:'')}${f('Lot spot',P.location&&P.location.lotLocation)}
+    ${f('First seen',String(d.first_seen).slice(0,10))}${f('Last seen',String(d.last_seen).slice(0,10))}</div>
+  <section><h3>Price history (${d.prices.length} observations)</h3>${spark(d.prices)}<div class="mut" style="font-size:12px">${d.prices.map(p=>`${String(p.seen_at).slice(0,10)}: ${money(p.price)}`).join(' · ')}</div></section>
+  ${hist?`<section><h3>History (detail page)</h3><div>${esc(hist.accidentCount)} accidents · ${esc(hist.ownerCount)} owners</div><div class="mut">${(hist.priorUses||[]).map(u=>esc(u.name)+(u.displayStates?' ('+esc(u.displayStates.join(', '))+')':'')).join(' · ')}</div></section>`:''}
+  ${x.history_report?(hr=>`<section><h3>Vehicle history report${hr.report_run?` <span class="mut" style="font-weight:400">(run ${esc(hr.report_run)})</span>`:''}</h3>
+    <div>${esc(hr.owners??'?')} owners · ${esc(hr.usage||'')} · ${hr.damage_reported?'<b style="color:var(--warn)">damage reported</b>':'no damage reported'} · ${esc(hr.service_record_count??0)} service records · ${esc(hr.open_recall_count??'?')} open recalls</div>
+    ${hr.checks?kv(hr.checks):''}
+    ${hr.owner_blocks?`<div class="mut">${hr.owner_blocks.map(o=>esc(`${o.location}, from ${o.owned_from}, ${o.usage}`)).join(' · ')}</div>`:''}
+    ${hr.service_summary?`<div class="mut" style="font-size:12px">${esc(hr.service_summary)}</div>`:''}
+    ${hr.open_recalls&&hr.open_recalls.length?`<ul>${hr.open_recalls.map(o=>`<li>${esc(o.date)} — ${esc(o.description)} (${esc(o.number)}) </li>`).join('')}</ul>`:''}
+    ${hr.events?`<details><summary style="cursor:pointer">${hr.events.length} recorded events</summary><table class="kv">${hr.events.map(e=>`<tr><td>${esc(e.date)}${e.owner?`<br><span class="mut">${esc(e.owner)}</span>`:''}</td><td>${esc(e.location||'')} ${e.odometer?`· ${num(e.odometer)} mi`:''} · <span class="mut">${esc(e.source||'')}</span><br>${esc((e.details||[]).join(' · '))}</td></tr>`).join('')}</table></details>`:''}
+  </section>`)(x.history_report):''}
+${x.history?`<section><h3>History report notes (manual)</h3>${kv(x.history)}</section>`:''}
+  ${recon&&recon.length?`<section><h3>Reconditioning</h3><ul>${recon.map(r=>`<li>${esc(r.type)}${r.description?' — <span class="mut">'+esc(r.description)+'</span>':''}</li>`).join('')}</ul></section>`:''}
+  ${war?`<section><h3>Warranty</h3>${war.map(w=>`${esc(w.type)}: ${w.years?esc(w.years)+' yr':''} ${w.miles?num(w.miles)+' mi':''}`).join(' · ')}</section>`:''}
+  ${fl.length?`<section><h3>Features (${fl.length})</h3><ul class="feat">${fl.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></section>`:''}
+  ${d.store_totals.length?`<section><h3>Store inventory counts</h3><div class="mut">${d.store_totals.map(s=>`${String(s.seen_at).slice(0,10)}: ${num(s.total)} cars`).join(' · ')}</div></section>`:''}
+  <section><details><summary style="cursor:pointer">Every field (${Object.keys(x).length})</summary>${kv(x)}</details></section>`;
+  $('panel').classList.add('open');$('close').onclick=()=>$('panel').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('panel').classList.remove('open')});
+$('go').onclick=()=>{offset=0;load()};F.forEach(k=>$(k).addEventListener('keydown',e=>{if(e.key==='Enter'){offset=0;load()}}));
+['drive','trans','body','state','model','source'].forEach(k=>$(k).onchange=()=>{offset=0;load()});B.concat(['thumbs']).forEach(k=>$(k).onchange=()=>{offset=0;load()});
+$('make').onchange=async()=>{$('model').value='';await facets();offset=0;load()};
+$('reset').onclick=()=>{F.forEach(k=>$(k).value='');B.forEach(k=>$(k).checked=false);sort='price';dir='asc';offset=0;facets().then(load)};
+$('prev').onclick=()=>{offset=Math.max(0,offset-LIMIT);load()};$('next').onclick=()=>{offset+=LIMIT;load()};
+(async()=>{const q=new URLSearchParams(location.search);await facets();if(q.get('make')){$('make').value=q.get('make');await facets()}
+  F.forEach(k=>{if(q.get(k))$(k).value=q.get(k)});B.forEach(k=>$(k).checked=q.get(k)==='1');sort=q.get('sort')||sort;dir=q.get('dir')||dir;offset=+(q.get('offset')||0);load()})();
+</script></body></html>
