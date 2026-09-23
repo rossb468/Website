@@ -171,7 +171,7 @@ async function open(sn){const d=await carDetail(sn);const x=d.data,det=x.detail&
   const feats=(P.featureInfo&&P.featureInfo.features)||x.features||[];const fl=feats.map(t=>typeof t==='string'?t:(t.name||t.displayName||JSON.stringify(t)));
   const hist=P.history, recon=P.reconditioning, war=P.warranty&&P.warranty.warranties;
   $('panel').innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px"><div><h2>${esc([d.year,d.make,d.model,d.trim].filter(Boolean).join(' '))}</h2>
-    <div class="mut">Stock #${esc(d.stockNumber)} · VIN ${esc(d.vin||'?')} · <a style="color:var(--acc)" href="${esc(sourceUrl(d))}" target="_blank">open on ${esc(SRC_LABEL[d.source]||d.source||'site')} ↗</a></div></div><button id="close">✕</button></div>
+    <div class="mut">Stock #${esc(d.stockNumber)} · VIN ${esc(d.vin||'?')} · <a style="color:var(--acc)" href="${esc(sourceUrl(d))}" target="_blank">open on ${esc(SRC_LABEL[d.source]||d.source||'site')} ↗</a>${bimmerWork(d)?` · <a style="color:var(--acc)" href="https://bimmer.work/" target="_blank" id="bimmer">run VIN at bimmer.work ↗</a> <span id="bimmermsg"></span>`:''}</div></div><button id="close">✕</button></div>
   <div class="grid">${f('Price',money(d.basePrice))}${f('Original price',x.originalPrice?money(x.originalPrice):'')}${f('Miles',num(d.mileage))}${f('MPG',x.mpgCity?x.mpgCity+' city / '+x.mpgHighway+' hwy':'')}
     ${f('Engine',P.engine||[x.engineSize,x.cylinders?x.cylinders+'-cyl':''].filter(Boolean).join(' '))}${f('Horsepower',x.horsepower)}${f('Drive',x.driveTrain||P.driveTrainType)}${f('Transmission',x.transmission)}
     ${f('Exterior',x.exteriorColor||P.exteriorColor)}${f('Interior',x.interiorColor||P.interiorColor)}${f('Store',[d.storeName,d.state].filter(Boolean).join(', '))}${f('Miles from '+HOME.zip,d.dist)}
@@ -193,7 +193,14 @@ ${x.history?`<section><h3>History report notes (manual)</h3>${kv(x.history)}</se
   ${fl.length?`<section><h3>Features (${fl.length})</h3><ul class="feat">${fl.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></section>`:''}
   ${d.store_totals.length?`<section><h3>Store inventory counts</h3><div class="mut">${d.store_totals.map(s=>`${String(s.seen_at).slice(0,10)}: ${num(s.total)} cars`).join(' · ')}</div></section>`:''}
   <section><details><summary style="cursor:pointer">Every field (${Object.keys(x).length})</summary>${kv(x)}</details></section>`;
+  if($('bimmer'))$('bimmer').onclick=()=>{$('bimmermsg').textContent=copyText(d.vin)?'(VIN copied, paste it into the box)':'(copy the VIN above and paste it there)'};
   $('panel').classList.add('open');$('close').onclick=()=>$('panel').classList.remove('open')}
+// bimmer.work decodes factory options for BMW-group cars. Its form needs a reCAPTCHA and takes no VIN in the URL,
+// so the link copies the VIN and opens the site for pasting.
+// Copies synchronously inside the click, before the new tab takes focus.
+function copyText(t){const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+  let ok=false;try{ok=document.execCommand('copy')}catch{}ta.remove();return ok}
+const bimmerWork=d=>d.vin&&/^(bmw|mini|rolls-royce)$/i.test(d.make||'');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('panel').classList.remove('open')});
 $('go').onclick=async()=>{await changeZip($('zip').value);offset=0;load()};
 $('zip').addEventListener('keydown',e=>{if(e.key==='Enter')$('go').onclick()});$('zip').onchange=()=>$('go').onclick();F.forEach(k=>$(k).addEventListener('keydown',e=>{if(e.key==='Enter'){offset=0;load()}}));
