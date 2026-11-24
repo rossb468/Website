@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pennsylvania to Seattle — Road Trip — Ross Bower</title>
+<meta name="description" content="Route map and stops for a cross-country drive from Pennsylvania to Seattle through the desert Southwest.">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="trip.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="back-link" href="../photography/index.html">&larr; Photography</a>
+        <a class="back-link" href="https://rossbower.com">rossbower.com &rarr;</a>
+    </header>
+
+    <main class="trip">
+        <section class="intro">
+            <p class="eyebrow">Road trip</p>
+            <h1 id="trip-title">Pennsylvania to Seattle</h1>
+            <p class="lede" id="trip-lede"></p>
+            <div class="stats" id="trip-stats"></div>
+            <p class="updated" id="trip-updated"></p>
+        </section>
+
+        <div class="map-wrap">
+            <div id="map" role="region" aria-label="Route map"></div>
+            <div class="map-legend" aria-hidden="true">
+                <span><i class="dot dot-night"></i>Overnight</span>
+                <span><i class="dot dot-sight"></i>Along the way</span>
+                <button type="button" id="show-all" class="map-btn">Whole route</button>
+            </div>
+        </div>
+
+        <section class="days" id="days" aria-label="Day by day"></section>
+    </main>
+
+    <footer class="site-footer">&copy; Ross Bower &middot; Map data &copy; OpenStreetMap contributors</footer>
+
+    <script src="vendor/leaflet/leaflet.js"></script>
+    <script src="data.js"></script>
+    <script src="trip.js"></script>
+</body>
+</html>
