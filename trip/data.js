@@ -3,8 +3,8 @@
 window.TRIP = {
   title: "Pennsylvania to Seattle",
   lede: "Driving cross-country with my dog Leo, an 85-pound lab mix: a fast run across the Midwest, then backroads, dirt tracks and desert camping through Colorado, Utah, Arizona, Nevada and California before heading north to Seattle.",
-  updated: "November 24, 2026",
-  status: "Planned route — it will change as I go.",
+  updated: "November 26, 2026",
+  status: "On the road. The route updates as plans change.",
   totalMiles: "about 4,200",
 
   start: { name: "Southeastern Pennsylvania", latlng: [39.9, -76.0] },
@@ -26,41 +26,42 @@ window.TRIP = {
     {
       day: 2,
       from: "Indianapolis",
-      to: "Salina, KS",
-      miles: 675,
-      hours: "10",
-      summary: "Across the Mississippi and Missouri rivers and into the prairie.",
-      overnight: { name: "Salina area", latlng: [38.84, -97.61] },
-      route: [[39.77, -86.16], [39.47, -87.41], [39.12, -88.54], [38.63, -90.2], [38.95, -92.33], [39.1, -94.58], [39.05, -95.68], [39.03, -96.83], [38.84, -97.61]],
+      to: "Kansas City",
+      miles: 485,
+      hours: "7.25",
+      summary: "Across the Mississippi and through Missouri to the edge of the plains.",
+      overnight: { name: "Kansas City area", latlng: [38.97, -94.73] },
+      route: [[39.77, -86.16], [39.47, -87.41], [39.12, -88.54], [38.63, -90.2], [38.95, -92.33], [39.1, -94.58], [38.97, -94.73]],
       sights: [
-        { name: "Gateway Arch", latlng: [38.6247, -90.1848], fact: "I-70 crosses the Mississippi into Missouri within sight of the 630-foot Gateway Arch, the tallest monument in the US." },
-        { name: "Flint Hills", latlng: [39.05, -96.45], fact: "West of Topeka, I-70 crosses the Flint Hills, the largest remaining stretch of tallgrass prairie in North America. Its rocky soil kept it from being plowed." }
+        { name: "Gateway Arch", latlng: [38.6247, -90.1848], fact: "I-70 crosses the Mississippi into Missouri within sight of the 630-foot Gateway Arch, the tallest monument in the US." }
       ]
     },
     {
       day: 3,
-      from: "Salina",
-      to: "Denver",
-      miles: 430,
-      hours: "6.5",
-      summary: "A steady climb across the High Plains to the first view of the Front Range.",
-      overnight: { name: "Denver area", latlng: [39.74, -104.99] },
-      route: [[38.84, -97.61], [38.88, -99.33], [39.4, -101.05], [39.35, -101.71], [39.26, -103.69], [39.74, -104.99]],
+      from: "Kansas City",
+      to: "Idaho Springs, CO",
+      miles: 640,
+      hours: "9.5",
+      summary: "Thanksgiving Day on the road: across Kansas and the High Plains, through Denver and into the foothills for a first night in the mountains.",
+      overnight: { name: "Idaho Springs area", latlng: [39.74, -105.51] },
+      route: [[38.97, -94.73], [39.05, -95.68], [39.03, -96.83], [38.84, -97.61], [38.88, -99.33], [39.4, -101.05], [39.35, -101.71], [39.26, -103.69], [39.74, -104.99], [39.71, -105.2], [39.74, -105.51]],
       sights: [
+        { name: "Flint Hills", latlng: [39.05, -96.45], fact: "West of Topeka, I-70 crosses the Flint Hills, the largest remaining stretch of tallgrass prairie in North America. Its rocky soil kept it from being plowed." },
         { name: "Mountain Time", latlng: [39.35, -101.71], fact: "Clocks go back an hour in western Kansas, around Goodland, before the Colorado line." },
+        { name: "First view of Pikes Peak", latlng: [39.26, -103.69], fact: "Near Limon, Pikes Peak (14,115 ft) appears alone on the horizon about 75 miles away. Its summit view inspired \"America the Beautiful,\" and it hosts the Pikes Peak International Hill Climb." },
         { name: "Mile High", latlng: [39.7393, -104.9848], fact: "One step on the west side of the Colorado State Capitol is marked as exactly one mile above sea level." }
       ]
     },
     {
       day: 4,
-      from: "Denver",
+      from: "Idaho Springs",
       to: "Moab",
-      miles: 380,
-      hours: "6",
+      miles: 345,
+      hours: "5.5",
       extra: "plus trail time",
       summary: "Over the Continental Divide, down Glenwood Canyon, then the Colorado River road into Moab and a first dirt road in the afternoon.",
       overnight: { name: "Moab area", latlng: [38.57, -109.55], fact: "Moab grew up on the 1950s uranium boom. Arches and Canyonlands national parks sit on either side of town." },
-      route: [[39.74, -104.99], [39.74, -105.51], [39.68, -105.93], [39.53, -106.22], [39.64, -106.37], [39.55, -107.32], [39.53, -107.78], [39.06, -108.55], [38.97, -109.32], [38.81, -109.3], [38.72, -109.31], [38.64, -109.41], [38.57, -109.55], [38.62, -109.69]],
+      route: [[39.74, -105.51], [39.68, -105.93], [39.53, -106.22], [39.64, -106.37], [39.55, -107.32], [39.53, -107.78], [39.06, -108.55], [38.97, -109.32], [38.81, -109.3], [38.72, -109.31], [38.64, -109.41], [38.57, -109.55], [38.62, -109.69]],
       sights: [
         { name: "Eisenhower Tunnel", latlng: [39.6797, -105.9286], fact: "At about 11,158 feet, the tunnel under the Continental Divide is the highest point on the entire Interstate Highway System." },
         { name: "Vail Pass", latlng: [39.5308, -106.2169], fact: "I-70 tops out at 10,662 feet here before dropping toward the Eagle River." },
