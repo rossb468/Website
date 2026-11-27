@@ -17,7 +17,7 @@ window.TRIP = {
       miles: 640,
       hours: "9.5",
       summary: "A long first push west on the Pennsylvania Turnpike and I-70.",
-      overnight: { name: "Indianapolis area", latlng: [39.77, -86.16] },
+      overnight: { name: "Motel 6, Indianapolis", latlng: [39.77, -86.16] },
       route: [[39.9, -76.0], [40.04, -76.3], [40.2, -77.2], [40.0, -78.24], [40.17, -80.25], [40.06, -80.72], [39.96, -82.99], [39.8, -84.2], [39.77, -86.16]],
       sights: [
         { name: "Wheeling, WV", latlng: [40.06, -80.72], fact: "From here west, I-70 shadows the old National Road, the first federally funded highway, begun in 1811. The Wheeling Suspension Bridge (1849) was briefly the longest suspension span in the world." }
@@ -30,7 +30,7 @@ window.TRIP = {
       miles: 485,
       hours: "7.25",
       summary: "Across the Mississippi and through Missouri to the edge of the plains.",
-      overnight: { name: "Kansas City area", latlng: [38.97, -94.73] },
+      overnight: { name: "Motel 6, Kansas City", latlng: [38.97, -94.73] },
       route: [[39.77, -86.16], [39.47, -87.41], [39.12, -88.54], [38.63, -90.2], [38.95, -92.33], [39.1, -94.58], [38.97, -94.73]],
       sights: [
         { name: "Gateway Arch", latlng: [38.6247, -90.1848], fact: "I-70 crosses the Mississippi into Missouri within sight of the 630-foot Gateway Arch, the tallest monument in the US." }
@@ -39,29 +39,28 @@ window.TRIP = {
     {
       day: 3,
       from: "Kansas City",
-      to: "Idaho Springs, CO",
+      to: "Fall River Road, CO",
       miles: 640,
       hours: "9.5",
-      summary: "Thanksgiving Day on the road: across Kansas and the High Plains, through Denver and into the foothills for a first night in the mountains.",
-      overnight: { name: "Idaho Springs area", latlng: [39.74, -105.51] },
-      route: [[38.97, -94.73], [39.05, -95.68], [39.03, -96.83], [38.84, -97.61], [38.88, -99.33], [39.4, -101.05], [39.35, -101.71], [39.26, -103.69], [39.74, -104.99], [39.71, -105.2], [39.74, -105.51]],
+      summary: "Thanksgiving Day on the road: across Kansas and the High Plains, through Denver and up Fall River Road for the first night of camping.",
+      overnight: { name: "Camping on Fall River Road, near Idaho Springs", latlng: [39.78, -105.56] },
+      route: [[38.97, -94.73], [39.05, -95.68], [39.03, -96.83], [38.84, -97.61], [38.88, -99.33], [39.4, -101.05], [39.35, -101.71], [39.26, -103.69], [39.74, -104.99], [39.71, -105.2], [39.745, -105.552], [39.78, -105.56]],
       sights: [
         { name: "Flint Hills", latlng: [39.05, -96.45], fact: "West of Topeka, I-70 crosses the Flint Hills, the largest remaining stretch of tallgrass prairie in North America. Its rocky soil kept it from being plowed." },
         { name: "Mountain Time", latlng: [39.35, -101.71], fact: "Clocks go back an hour in western Kansas, around Goodland, before the Colorado line." },
-        { name: "First view of Pikes Peak", latlng: [39.26, -103.69], fact: "Near Limon, Pikes Peak (14,115 ft) appears alone on the horizon about 75 miles away. Its summit view inspired \"America the Beautiful,\" and it hosts the Pikes Peak International Hill Climb." },
         { name: "Mile High", latlng: [39.7393, -104.9848], fact: "One step on the west side of the Colorado State Capitol is marked as exactly one mile above sea level." }
       ]
     },
     {
       day: 4,
-      from: "Idaho Springs",
+      from: "Fall River Road",
       to: "Moab",
       miles: 345,
       hours: "5.5",
       extra: "plus trail time",
       summary: "Over the Continental Divide, down Glenwood Canyon, then the Colorado River road into Moab and a first dirt road in the afternoon.",
       overnight: { name: "Moab area", latlng: [38.57, -109.55], fact: "Moab grew up on the 1950s uranium boom. Arches and Canyonlands national parks sit on either side of town." },
-      route: [[39.74, -105.51], [39.68, -105.93], [39.53, -106.22], [39.64, -106.37], [39.55, -107.32], [39.53, -107.78], [39.06, -108.55], [38.97, -109.32], [38.81, -109.3], [38.72, -109.31], [38.64, -109.41], [38.57, -109.55], [38.62, -109.69]],
+      route: [[39.78, -105.56], [39.745, -105.552], [39.68, -105.93], [39.53, -106.22], [39.64, -106.37], [39.55, -107.32], [39.53, -107.78], [39.06, -108.55], [38.97, -109.32], [38.81, -109.3], [38.72, -109.31], [38.64, -109.41], [38.57, -109.55], [38.62, -109.69]],
       sights: [
         { name: "Eisenhower Tunnel", latlng: [39.6797, -105.9286], fact: "At about 11,158 feet, the tunnel under the Continental Divide is the highest point on the entire Interstate Highway System." },
         { name: "Vail Pass", latlng: [39.5308, -106.2169], fact: "I-70 tops out at 10,662 feet here before dropping toward the Eagle River." },
